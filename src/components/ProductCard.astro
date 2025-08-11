@@ -13,8 +13,8 @@ export interface Props {
 const { id, nombre, precio, moneda, descripcion, imagen, destacado = false, tags = [] } = Astro.props;
 
 // Construir URL de GitHub para la imagen
-const githubUser = "tu-usuario"; // CAMBIAR por tu usuario de GitHub
-const githubRepo = "catalogo-productos"; // CAMBIAR si usas otro nombre
+const githubUser = "cesarcon3"; // CAMBIAR por tu usuario de GitHub
+const githubRepo = "catalogo-productos-crealolita"; // CAMBIAR si usas otro nombre
 const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/main/src/content/productos/${id}/${imagen}`;
 ---
 
