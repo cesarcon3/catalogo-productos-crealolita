@@ -1,0 +1,23 @@
+{
+  "id": "corazon-colgante-15-anos",
+  "nombre": "Corazón Colgante para 15 Años",
+  "categoria": "quinceanos",
+  "precio": 25.00,
+  "moneda": "USD",
+  "descripcion": "Elegante corazón decorativo en MDF con grabado láser personalizado. Perfecto como recuerdo de quinceañera con diseños florales y el nombre de la festejada.",
+  "caracteristicas": [
+    "MDF de alta calidad 3mm",
+    "Medidas: 15cm x 15cm", 
+    "Grabado láser de precisión",
+    "Personalización incluida",
+    "Cinta satinada para colgar"
+  ],
+  "personalizacion": {
+    "disponible": true,
+    "opciones": ["Nombre de la quinceañera", "Fecha del evento", "Frase especial"]
+  },
+  "tiempoProduccion": "3-5 días",
+  "disponible": true,
+  "destacado": true,
+  "tags": ["quinceaños", "colgante", "personalizado", "recuerdo"]
+}

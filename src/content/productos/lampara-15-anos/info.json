@@ -1,0 +1,23 @@
+{
+  "id": "lampara-15-anos",
+  "nombre": "Lámpara LED Quinceañera",
+  "categoria": "quinceanos",
+  "precio": 45.00,
+  "moneda": "USD",
+  "descripcion": "Lámpara decorativa en MDF con grabado láser y luz LED. Diseño exclusivo para quinceañeras con motivos florales y mariposas.",
+  "caracteristicas": [
+    "MDF cortado y grabado con láser",
+    "Base con iluminación LED incluida",
+    "Medidas: 20cm x 25cm x 10cm",
+    "Alimentación USB o pilas",
+    "7 colores de luz disponibles"
+  ],
+  "personalizacion": {
+    "disponible": true,
+    "opciones": ["Nombre", "Fecha", "Diseño personalizado"]
+  },
+  "tiempoProduccion": "5-7 días",
+  "disponible": true,
+  "destacado": true,
+  "tags": ["quinceaños", "lámpara", "LED", "decoración", "personalizado"]
+}
