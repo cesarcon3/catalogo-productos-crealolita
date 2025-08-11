@@ -4,7 +4,7 @@ export interface Props {
   description?: string;
 }
 
-const { title, description = "Catálogo de productos en MDF con corte y grabado láser" } = Astro.props;
+const { title, description = "Catálogo de productos personalizados en MDF - Creaciones Lolita" } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -15,27 +15,35 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title} | MDF Creaciones</title>
+    <title>{title} | Creaciones Lolita</title>
     
     <style>
       :root {
-        /* Paleta de colores principal */
-        --cream-1: #F5F5DC;  /* Base */
-        --cream-2: #FFF8E1;  /* Cards */
-        --cream-3: #FAF3E0;  /* Backgrounds */
-        --gold: #D4AF37;     /* Accents */
-        --gold-dark: #B8941F; /* Gold hover */
-        --soft-pink: #F8C8DC; /* Hover effects */
-        --soft-pink-light: #FDE2EC; /* Light pink backgrounds */
+        /* Colores Base - Tonos Crema */
+        --cream-1: #FAF7F2;
+        --cream-2: #FFF9F0;
+        --cream-3: #F5EDE0;
         
-        /* Colores de texto */
-        --text: #3D3D3D;
-        --text-light: #6B6B6B;
+        /* Colores Acento - Dorados */
+        --gold: #C9A961;
+        --gold-dark: #A68B4A;
+        --gold-light: #E4D4A8;
+        
+        /* Colores Rosa */
+        --soft-pink: #F4C2C2;
+        --soft-pink-light: #FDE8E8;
+        --soft-pink-dark: #E8A0A0;
+        
+        /* Colores de Texto */
+        --text: #2C2416;
+        --text-light: #5C4E3C;
+        --text-muted: #8B7355;
         --text-on-gold: #FFFFFF;
         
-        /* Otros */
+        /* Utilidades */
         --border: #E8D7C3;
-        --shadow: rgba(212, 175, 55, 0.15);
+        --shadow-gold: rgba(201, 169, 97, 0.15);
+        --shadow-pink: rgba(244, 194, 194, 0.12);
       }
       
       * {
@@ -66,7 +74,7 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
         background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
         color: var(--text-on-gold);
         padding: 1.5rem 0;
-        box-shadow: 0 2px 15px var(--shadow);
+        box-shadow: 0 2px 15px var(--shadow-gold);
         position: relative;
         overflow: hidden;
       }
@@ -83,15 +91,16 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
       }
       
       header h1 {
-        font-size: 1.8rem;
+        font-size: 2rem;
         font-weight: 700;
         text-align: center;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         position: relative;
         z-index: 1;
+        letter-spacing: 1px;
       }
       
-      header p {
+      header .subtitle {
         text-align: center;
         margin-top: 0.5rem;
         opacity: 0.95;
@@ -109,7 +118,7 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
       
       footer {
         background: var(--cream-3);
-        border-top: 2px solid var(--gold);
+        border-top: 2px solid var(--gold-light);
         padding: 2rem 0;
         margin-top: 4rem;
       }
@@ -139,38 +148,22 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
         padding: 0.5rem 1rem;
         border-radius: 20px;
         background: var(--cream-2);
+        border: 1px solid var(--border);
       }
       
       .social-links a:hover {
         color: var(--gold-dark);
         background: var(--soft-pink-light);
         transform: translateY(-2px);
-      }
-      
-      /* Estilos globales para botones */
-      :global(.btn-primary) {
-        background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
-        color: white;
-        padding: 12px 24px;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s;
-        display: inline-block;
-        box-shadow: 0 4px 15px var(--shadow);
-      }
-      
-      :global(.btn-primary:hover) {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px var(--shadow);
+        border-color: var(--soft-pink);
       }
     </style>
   </head>
   <body>
     <header>
       <div class="container">
-        <h1>✨ MDF Creaciones</h1>
-        <p>Productos personalizados en MDF con corte y grabado láser</p>
+        <h1>✨ Creaciones Lolita ✨</h1>
+        <p class="subtitle">Arte en MDF • Corte y Grabado Láser • Diseños Personalizados</p>
       </div>
     </header>
     
@@ -182,8 +175,8 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
     
     <footer>
       <div class="container">
-        <p>© 2024 MDF Creaciones. Todos los derechos reservados.</p>
-        <p>Productos artesanales con amor 💛</p>
+        <p>© 2024 Creaciones Lolita. Todos los derechos reservados.</p>
+        <p>Cada pieza hecha con amor y dedicación 💝</p>
         <div class="social-links">
           <a href="#">WhatsApp</a>
           <a href="#">Instagram</a>

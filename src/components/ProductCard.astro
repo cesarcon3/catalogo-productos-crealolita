@@ -12,9 +12,9 @@ export interface Props {
 
 const { id, nombre, precio, moneda, descripcion, imagen, destacado = false, tags = [] } = Astro.props;
 
-// Construir URL de GitHub para la imagen
-const githubUser = "cesarcon3"; // CAMBIAR por tu usuario de GitHub
-const githubRepo = "catalogo-productos-crealolita"; // CAMBIAR si usas otro nombre
+// Configuración de GitHub actualizada
+const githubUser = "cesarcon3";
+const githubRepo = "catalogo-productos-crealolita";
 const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/main/src/content/productos/${id}/${imagen}`;
 ---
 
@@ -26,7 +26,7 @@ const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/
       src={imageUrl} 
       alt={nombre}
       loading="lazy"
-      onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23FAF3E0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Georgia\' font-size=\'20\' fill=\'%23B8941F\'%3EImagen próximamente%3C/text%3E%3C/svg%3E'"
+      onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23F5EDE0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Georgia\' font-size=\'20\' fill=\'%23A68B4A\'%3EImagen próximamente%3C/text%3E%3C/svg%3E'"
     />
   </div>
   
@@ -53,29 +53,29 @@ const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/
 
 <style>
   .product-card {
-    background: var(--cream-2, #FFF8E1);
+    background: var(--cream-2);
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.1);
+    box-shadow: 0 4px 12px var(--shadow-gold);
     transition: all 0.3s ease;
     position: relative;
     height: 100%;
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--border, #E8D7C3);
+    border: 1px solid var(--border);
   }
   
   .product-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
-    border-color: var(--gold, #D4AF37);
+    box-shadow: 0 8px 25px var(--shadow-gold);
+    border-color: var(--gold-light);
   }
   
   .badge-destacado {
     position: absolute;
     top: 12px;
     right: 12px;
-    background: linear-gradient(135deg, var(--gold, #D4AF37), var(--gold-dark, #B8941F));
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
     color: white;
     padding: 6px 14px;
     border-radius: 20px;
@@ -83,26 +83,14 @@ const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/
     font-weight: 600;
     z-index: 10;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    font-family: 'Georgia', serif;
   }
   
   .image-container {
     width: 100%;
     height: 250px;
     overflow: hidden;
-    background: var(--cream-3, #FAF3E0);
+    background: var(--cream-3);
     position: relative;
-  }
-  
-  .image-container::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom, transparent 70%, rgba(245, 245, 220, 0.5) 100%);
-    pointer-events: none;
   }
   
   .image-container img {
@@ -121,25 +109,22 @@ const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: var(--cream-2, #FFF8E1);
   }
   
   .content h3 {
     font-size: 1.15rem;
     font-weight: 600;
-    color: var(--text, #3D3D3D);
+    color: var(--text);
     margin-bottom: 0.5rem;
     line-height: 1.3;
-    font-family: 'Georgia', serif;
   }
   
   .description {
-    color: var(--text-light, #6B6B6B);
+    color: var(--text-light);
     font-size: 0.9rem;
     line-height: 1.6;
     margin-bottom: 0.75rem;
     flex: 1;
-    font-family: 'Georgia', serif;
   }
   
   .tags {
@@ -151,11 +136,11 @@ const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/
   
   .tag {
     font-size: 0.75rem;
-    color: var(--gold-dark, #B8941F);
-    background: var(--soft-pink-light, #FDE2EC);
+    color: var(--gold-dark);
+    background: var(--soft-pink-light);
     padding: 3px 10px;
     border-radius: 15px;
-    font-family: 'Georgia', serif;
+    border: 1px solid var(--soft-pink);
   }
   
   .footer {
@@ -163,19 +148,18 @@ const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/
     justify-content: space-between;
     align-items: center;
     padding-top: 1rem;
-    border-top: 1px solid var(--border, #E8D7C3);
+    border-top: 1px solid var(--border);
   }
   
   .price {
     font-size: 1.35rem;
     font-weight: 700;
-    color: var(--gold, #D4AF37);
-    font-family: 'Georgia', serif;
+    color: var(--gold-dark);
     text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
   }
   
   .btn-ver {
-    background: linear-gradient(135deg, var(--gold, #D4AF37), var(--gold-dark, #B8941F));
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
     color: white;
     padding: 8px 18px;
     border-radius: 20px;
@@ -183,13 +167,11 @@ const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/
     font-size: 0.9rem;
     font-weight: 500;
     transition: all 0.3s;
-    font-family: 'Georgia', serif;
-    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 2px 8px var(--shadow-gold);
   }
   
   .btn-ver:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
-    background: linear-gradient(135deg, var(--gold-dark, #B8941F), var(--gold, #D4AF37));
+    box-shadow: 0 4px 12px var(--shadow-gold);
   }
 </style>
