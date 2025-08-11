@@ -1,24 +1,72 @@
 {
   "siteName": "Creaciones Lolita",
   "siteUrl": "https://creacioneslolita.com",
-  "defaultDescription": "Productos personalizados en MDF con corte y grabado láser. Recuerdos únicos para quinceañeras, bodas y eventos especiales.",
+  "defaultDescription": "Productos personalizados en MDF con corte y grabado láser. Recuerdos únicos para quinceañeras, bodas y eventos especiales en Venezuela.",
   "defaultImage": "/images/og-image.jpg",
-  "logo": "/images/logo-creaciones-lolita.svg",
+  "logo": "/logo.webp",
+  "language": "es",
+  "locale": "es_ES",
+  "timezone": "America/Caracas",
+  
   "whatsapp": {
     "number": "584161452966",
     "message": "Hola! Me interesa conocer más sobre los productos de Creaciones Lolita",
     "displayNumber": "+58 416-1452966"
   },
+  
   "social": {
     "instagram": "https://instagram.com/creacioneslolita",
-    "facebook": "https://facebook.com/creacioneslolita"
+    "facebook": "https://facebook.com/creacioneslolita",
+    "tiktok": "",
+    "youtube": ""
   },
+  
   "keywords": [
     "MDF personalizado",
     "recuerdos quinceañeras",
     "grabado láser",
     "productos artesanales",
     "Venezuela",
-    "decoración eventos"
-  ]
+    "decoración eventos",
+    "recuerdos bodas",
+    "regalos personalizados",
+    "corte láser",
+    "madera MDF",
+    "artesanías venezolanas",
+    "eventos especiales",
+    "diseños únicos",
+    "personalización láser"
+  ],
+  
+  "business": {
+    "type": "Local Business",
+    "address": {
+      "country": "Venezuela",
+      "region": "Región de tu negocio",
+      "city": "Tu ciudad"
+    },
+    "hours": {
+      "monday": "09:00-18:00",
+      "tuesday": "09:00-18:00",
+      "wednesday": "09:00-18:00",
+      "thursday": "09:00-18:00",
+      "friday": "09:00-18:00",
+      "saturday": "09:00-15:00",
+      "sunday": "Cerrado"
+    },
+    "email": "info@creacioneslolita.com"
+  },
+  
+  "seo": {
+    "author": "Creaciones Lolita",
+    "robots": "index, follow",
+    "googleSiteVerification": "tu-codigo-de-google-verification",
+    "bingVerification": "tu-codigo-de-bing-verification"
+  },
+  
+  "analytics": {
+    "googleAnalytics": "G-XXXXXXXXXX",
+    "facebookPixel": "",
+    "hotjar": ""
+  }
 }

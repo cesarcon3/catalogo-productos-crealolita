@@ -1,23 +1,127 @@
 ---
+import siteConfig from '../config/site-config.json';
+
 export interface Props {
-  title: string;
+  title?: string;
   description?: string;
+  image?: string;
+  keywords?: string[];
+  canonical?: string;
+  noindex?: boolean;
+  type?: 'website' | 'article' | 'product';
+  author?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
 }
 
-const { title, description = "Catálogo de productos en MDF con corte y grabado láser" } = Astro.props;
+const {
+  title,
+  description = siteConfig.defaultDescription,
+  image = siteConfig.defaultImage,
+  keywords = siteConfig.keywords,
+  canonical,
+  noindex = false,
+  type = 'website',
+  author,
+  publishedTime,
+  modifiedTime
+} = Astro.props;
+
+// Construir el título completo
+const fullTitle = title ? `${title} | ${siteConfig.siteName}` : siteConfig.siteName;
+
+// URL canónica
+const canonicalUrl = canonical || new URL(Astro.url.pathname, siteConfig.siteUrl).href;
+
+// Imagen Open Graph completa
+const ogImage = image.startsWith('http') ? image : new URL(image, siteConfig.siteUrl).href;
+
+// Keywords como string
+const keywordsString = keywords.join(', ');
+
+// Estructura de datos JSON-LD para SEO
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": type === 'product' ? 'Product' : 'Organization',
+  "name": siteConfig.siteName,
+  "url": siteConfig.siteUrl,
+  "description": description,
+  "logo": new URL(siteConfig.logo, siteConfig.siteUrl).href,
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": siteConfig.whatsapp.displayNumber,
+    "contactType": "Customer Service",
+    "availableLanguage": ["Spanish"]
+  },
+  "sameAs": [
+    siteConfig.social.instagram,
+    siteConfig.social.facebook
+  ]
+};
 ---
 
 <!DOCTYPE html>
 <html lang="es">
   <head>
+    <!-- Meta básicos -->
     <meta charset="UTF-8" />
-    <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <!-- FontAwesome para el botón de WhatsApp -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <meta name="generator" content={Astro.generator} />
-    <title>{title} | Creaciones Lolita</title>
+    
+    <!-- SEO Principal -->
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywordsString} />
+    {author && <meta name="author" content={author} />}
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalUrl} />
+    
+    <!-- Robots -->
+    {noindex ? (
+      <meta name="robots" content="noindex, nofollow" />
+    ) : (
+      <meta name="robots" content="index, follow" />
+    )}
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:site_name" content={siteConfig.siteName} />
+    <meta property="og:locale" content="es_ES" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    
+    <!-- Preconnect para mejor rendimiento -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link rel="dns-prefetch" href="https://api.whatsapp.com" />
+    
+    <!-- FontAwesome para el botón de WhatsApp -->
+    <link 
+      rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     
     <style>
       :root {
@@ -28,7 +132,7 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
         --gold: #D4AF37;     /* Accents */
         --gold-dark: #B8941F; /* Gold hover */
         --gold-light: #E5C547;     /* Hover effects suaves */
-        --gold-ultra-light: #F2E8B8
+        --gold-ultra-light: #F2E8B8;
         
         /* Colores de texto */
         --text: #3D3D3D;
@@ -278,19 +382,18 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
     </style>
   </head>
   <body>
-   <header>
-  <div class="container">
-    <div class="header-content">
-      <a href="/">
-        <img src="/logo.webp" alt="Logo Creaciones Lolita" class="logo" />
-      </a>
-      <div class="brand-text">
-        <!-- <h1>Creaciones Lolita</h1> -->
-        <p>Productos personalizados en MDF con corte y grabado láser</p>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <a href="/" aria-label="Ir a página principal de Creaciones Lolita">
+            <img src={siteConfig.logo} alt={`Logo ${siteConfig.siteName}`} class="logo" />
+          </a>
+          <div class="brand-text">
+            <p>{siteConfig.defaultDescription}</p>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</header>
+    </header>
     
     <main>
       <div class="container">
@@ -300,18 +403,45 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
     
     <footer>
       <div class="container">
-        <p>© 2025 Creaciones Lolita. Todos los derechos reservados.</p>
+        <p>© 2025 {siteConfig.siteName}. Todos los derechos reservados.</p>
         <p>Productos artesanales con amor 💛</p>
         <div class="social-links">
-          <a href="https://api.whatsapp.com/send?phone=584161452966&text=Hola%2C%20me%20gustar%C3%ADa%20obtener%20informaci%C3%B3n%20acerca%20de%20" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-          <a href="https://www.instagram.com/crealolita/" target="_blank" rel="noopener noreferrer">Instagram</a>
-          <a href="https://www.facebook.com/people/Crealolita-Dise%C3%B1os-Personalizados-Regalos-Creativos/61578079074035/" target="_blank" rel="noopener noreferrer">Facebook</a>
+          <a 
+            href={`https://api.whatsapp.com/send?phone=${siteConfig.whatsapp.number}&text=${encodeURIComponent(siteConfig.whatsapp.message)}`} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            aria-label="Contactar por WhatsApp"
+          >
+            WhatsApp
+          </a>
+          <a 
+            href={siteConfig.social.instagram} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            aria-label="Seguir en Instagram"
+          >
+            Instagram
+          </a>
+          <a 
+            href={siteConfig.social.facebook} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            aria-label="Seguir en Facebook"
+          >
+            Facebook
+          </a>
         </div>
       </div>
     </footer>
 
     <!-- Botón flotante de WhatsApp -->
-    <a aria-label="Whatsapp" href="https://api.whatsapp.com/send?phone=584161452966&text=Hola%2C%20me%20gustar%C3%ADa%20obtener%20informaci%C3%B3n%20acerca%20de%20" class="whatsapp" target="_blank">
+    <a 
+      aria-label="Contactar por WhatsApp" 
+      href={`https://api.whatsapp.com/send?phone=${siteConfig.whatsapp.number}&text=${encodeURIComponent(siteConfig.whatsapp.message)}`}
+      class="whatsapp" 
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <i class="fa-brands fa-whatsapp"></i>
     </a>
 
