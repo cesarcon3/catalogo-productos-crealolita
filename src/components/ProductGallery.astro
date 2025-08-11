@@ -1,0 +1,261 @@
+---
+export interface Props {
+  productId: string;
+  images: string[];
+  productName: string;
+}
+
+const { productId, images, productName } = Astro.props;
+
+// Configuración de GitHub
+const githubUser = "cesarcon3"; // CAMBIAR por tu usuario de GitHub
+const githubRepo = "catalogo-productos-crealolita"; // CAMBIAR si usas otro nombre
+const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/main/src/content/productos/${productId}/`;
+---
+
+<div class="gallery-container">
+  <div class="main-image-container">
+    <img 
+      id="mainImage"
+      src={`${baseUrl}${images[0]}`}
+      alt={`${productName} - Vista principal`}
+      class="main-image"
+      onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'600\' height=\'400\' viewBox=\'0 0 600 400\'%3E%3Crect width=\'600\' height=\'400\' fill=\'%23f3f4f6\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'system-ui\' font-size=\'24\' fill=\'%239ca3af\'%3EImagen no disponible%3C/text%3E%3C/svg%3E'"
+    />
+    <div class="zoom-hint">🔍 Click para ampliar</div>
+  </div>
+  
+  {images.length > 1 && (
+    <div class="thumbnails">
+      {images.map((image, index) => (
+        <button
+          class={`thumbnail ${index === 0 ? 'active' : ''}`}
+          data-image={`${baseUrl}${image}`}
+          data-index={index}
+          aria-label={`Ver imagen ${index + 1}`}
+        >
+          <img 
+            src={`${baseUrl}${image}`}
+            alt={`${productName} - Vista ${index + 1}`}
+            loading="lazy"
+            onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23f3f4f6\'/%3E%3C/svg%3E'"
+          />
+        </button>
+      ))}
+    </div>
+  )}
+</div>
+
+<!-- Modal para imagen ampliada -->
+<div id="imageModal" class="modal">
+  <span class="close">&times;</span>
+  <img class="modal-content" id="modalImage" alt="Imagen ampliada">
+  <div class="modal-caption" id="caption"></div>
+</div>
+
+<style>
+  .gallery-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .main-image-container {
+    position: relative;
+    background: #f9fafb;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .main-image {
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+    cursor: zoom-in;
+    transition: transform 0.3s;
+  }
+  
+  .main-image:hover {
+    transform: scale(1.02);
+  }
+  
+  .zoom-hint {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .main-image-container:hover .zoom-hint {
+    opacity: 1;
+  }
+  
+  .thumbnails {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 0.75rem;
+  }
+  
+  .thumbnail {
+    border: 2px solid transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #f9fafb;
+    transition: all 0.3s;
+    padding: 0;
+    height: 80px;
+  }
+  
+  .thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .thumbnail:hover {
+    border-color: #8b5cf6;
+    transform: scale(1.05);
+  }
+  
+  .thumbnail.active {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+  }
+  
+  /* Modal styles */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    animation: fadeIn 0.3s;
+  }
+  
+  .modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 90vh;
+    margin-top: 2rem;
+    animation: zoomIn 0.3s;
+  }
+  
+  .modal-caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+  }
+  
+  .close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .close:hover {
+    color: #8b5cf6;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes zoomIn {
+    from { transform: scale(0.8); }
+    to { transform: scale(1); }
+  }
+  
+  @media (max-width: 768px) {
+    .main-image {
+      height: 300px;
+    }
+    
+    .thumbnails {
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    }
+    
+    .thumbnail {
+      height: 60px;
+    }
+  }
+</style>
+
+<script>
+  // Cambiar imagen principal al hacer click en miniaturas
+  const thumbnails = document.querySelectorAll('.thumbnail');
+  const mainImage = document.getElementById('mainImage') as HTMLImageElement;
+  
+  thumbnails.forEach(thumb => {
+    thumb.addEventListener('click', function() {
+      const newSrc = this.getAttribute('data-image');
+      if (newSrc && mainImage) {
+        mainImage.src = newSrc;
+        
+        // Actualizar clase active
+        thumbnails.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      }
+    });
+  });
+  
+  // Modal para ampliar imagen
+  const modal = document.getElementById('imageModal');
+  const modalImg = document.getElementById('modalImage') as HTMLImageElement;
+  const caption = document.getElementById('caption');
+  const closeBtn = document.querySelector('.close');
+  
+  if (mainImage && modal && modalImg) {
+    mainImage.addEventListener('click', function() {
+      modal.style.display = 'block';
+      modalImg.src = this.src;
+      if (caption) {
+        caption.textContent = this.alt;
+      }
+    });
+  }
+  
+  if (closeBtn && modal) {
+    closeBtn.addEventListener('click', function() {
+      modal.style.display = 'none';
+    });
+  }
+  
+  // Cerrar modal al hacer click fuera
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  }
+  
+  // Cerrar con ESC
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal) {
+      modal.style.display = 'none';
+    }
+  });
+</script>
