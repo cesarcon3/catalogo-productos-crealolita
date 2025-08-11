@@ -1,0 +1,194 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Página no encontrada">
+  <div class="error-container">
+    <div class="error-content">
+      <h1 class="error-code">404</h1>
+      <h2 class="error-title">¡Ups! Página no encontrada</h2>
+      <p class="error-message">
+        Parece que el producto o página que buscas no existe o fue movido.
+      </p>
+      
+      <div class="error-illustration">
+        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="100" r="80" stroke="#8b5cf6" stroke-width="3" stroke-dasharray="10 5" opacity="0.3"/>
+          <rect x="60" y="60" width="80" height="80" rx="8" fill="#f3e8ff"/>
+          <path d="M80 90 Q100 70 120 90" stroke="#8b5cf6" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <circle cx="85" cy="100" r="5" fill="#8b5cf6"/>
+          <circle cx="115" cy="100" r="5" fill="#8b5cf6"/>
+          <path d="M85 120 Q100 110 115 120" stroke="#8b5cf6" stroke-width="3" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      
+      <div class="actions">
+        <a href="/" class="btn-home">
+          ← Volver al catálogo
+        </a>
+        <a href="#" class="btn-contact">
+          💬 Contáctanos
+        </a>
+      </div>
+      
+      <div class="suggestions">
+        <p>Mientras tanto, puedes:</p>
+        <ul>
+          <li>Explorar nuestro catálogo completo</li>
+          <li>Contactarnos para un diseño personalizado</li>
+          <li>Seguirnos en redes sociales para ver novedades</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .error-container {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .error-content {
+    text-align: center;
+    max-width: 500px;
+  }
+
+  .error-code {
+    font-size: 6rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #8b5cf6, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .error-title {
+    font-size: 1.8rem;
+    color: #1f2937;
+    margin: 1rem 0;
+  }
+
+  .error-message {
+    color: #6b7280;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .error-illustration {
+    margin: 2rem 0;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+  }
+
+  .btn-home {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .btn-home:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+  }
+
+  .btn-contact {
+    background: white;
+    color: #8b5cf6;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    border: 2px solid #8b5cf6;
+    transition: all 0.3s;
+  }
+
+  .btn-contact:hover {
+    background: #f3e8ff;
+    transform: translateY(-2px);
+  }
+
+  .suggestions {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .suggestions p {
+    color: #6b7280;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .suggestions ul {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    display: inline-block;
+  }
+
+  .suggestions li {
+    color: #6b7280;
+    padding: 0.5rem 0;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  .suggestions li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #8b5cf6;
+  }
+
+  @media (max-width: 768px) {
+    .error-code {
+      font-size: 4rem;
+    }
+
+    .error-title {
+      font-size: 1.5rem;
+    }
+
+    .error-message {
+      font-size: 1rem;
+    }
+
+    .actions {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .btn-home,
+    .btn-contact {
+      width: 100%;
+      max-width: 250px;
+    }
+  }
+</style>

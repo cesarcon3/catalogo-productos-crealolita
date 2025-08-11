@@ -1,0 +1,352 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProductGallery from '../../components/ProductGallery.astro';
+import fs from 'fs';
+import path from 'path';
+
+export function getStaticPaths() {
+  const productosDir = path.join(process.cwd(), 'src/content/productos');
+  const carpetas = fs.readdirSync(productosDir).filter(item => {
+    const itemPath = path.join(productosDir, item);
+    return fs.statSync(itemPath).isDirectory();
+  });
+
+  const paths = [];
+  
+  for (const carpeta of carpetas) {
+    const infoPath = path.join(productosDir, carpeta, 'info.json');
+    
+    if (fs.existsSync(infoPath)) {
+      const info = JSON.parse(fs.readFileSync(infoPath, 'utf-8'));
+      
+      // Obtener las imágenes
+      const productPath = path.join(productosDir, carpeta);
+      const archivos = fs.readdirSync(productPath);
+      const imagenes = archivos
+        .filter(file => file.match(/\.(jpg|jpeg|png|webp)$/i))
+        .sort((a, b) => {
+          const numA = parseInt(a.match(/\d+/)?.[0] || '0');
+          const numB = parseInt(b.match(/\d+/)?.[0] || '0');
+          return numA - numB;
+        });
+      
+      paths.push({
+        params: { id: info.id },
+        props: { 
+          producto: info,
+          imagenes: imagenes.length > 0 ? imagenes : ['1.jpg']
+        }
+      });
+    }
+  }
+  
+  return paths;
+}
+
+const { id } = Astro.params;
+const { producto, imagenes } = Astro.props;
+---
+
+<Layout title={producto.nombre} description={producto.descripcion}>
+  <div class="breadcrumb">
+    <a href="/">← Volver al catálogo</a>
+  </div>
+
+  <div class="producto-container">
+    <!-- Galería de imágenes -->
+    <div class="galeria-section">
+      <ProductGallery 
+        productId={producto.id}
+        images={imagenes}
+        productName={producto.nombre}
+      />
+    </div>
+
+    <!-- Información del producto -->
+    <div class="info-section">
+      <h1>{producto.nombre}</h1>
+      
+      <div class="precio-container">
+        <span class="precio">
+          {producto.moneda === "USD" ? "$" : producto.moneda} {producto.precio.toFixed(2)}
+        </span>
+        {producto.disponible ? (
+          <span class="disponibilidad disponible">✓ Disponible</span>
+        ) : (
+          <span class="disponibilidad no-disponible">✗ No disponible</span>
+        )}
+      </div>
+
+      <p class="descripcion">{producto.descripcion}</p>
+
+      <!-- Características -->
+      {producto.caracteristicas && producto.caracteristicas.length > 0 && (
+        <div class="caracteristicas">
+          <h3>📋 Características</h3>
+          <ul>
+            {producto.caracteristicas.map(caracteristica => (
+              <li>{caracteristica}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <!-- Personalización -->
+      {producto.personalizacion?.disponible && (
+        <div class="personalizacion">
+          <h3>✨ Personalización disponible</h3>
+          <div class="opciones-personalizacion">
+            {producto.personalizacion.opciones.map(opcion => (
+              <span class="opcion-tag">{opcion}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- Tiempo de producción -->
+      {producto.tiempoProduccion && (
+        <div class="tiempo-produccion">
+          <h3>⏱️ Tiempo de producción</h3>
+          <p>{producto.tiempoProduccion}</p>
+        </div>
+      )}
+
+      <!-- Tags -->
+      {producto.tags && producto.tags.length > 0 && (
+        <div class="tags-container">
+          {producto.tags.map(tag => (
+            <span class="tag">#{tag}</span>
+          ))}
+        </div>
+      )}
+
+      <!-- CTA -->
+      <div class="cta-container">
+        <a href="#" class="btn-primary">
+          💬 Solicitar por WhatsApp
+        </a>
+        <p class="nota">Menciona el código: <strong>{producto.id}</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Productos relacionados (placeholder) -->
+  <section class="relacionados">
+    <h2>También te puede interesar</h2>
+    <p class="coming-soon">Más productos próximamente...</p>
+  </section>
+</Layout>
+
+<style>
+  .breadcrumb {
+    margin-bottom: 2rem;
+  }
+
+  .breadcrumb a {
+    color: #8b5cf6;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: opacity 0.3s;
+  }
+
+  .breadcrumb a:hover {
+    opacity: 0.8;
+  }
+
+  .producto-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 4rem;
+  }
+
+  .info-section h1 {
+    font-size: 2rem;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .precio-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .precio {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #8b5cf6;
+  }
+
+  .disponibilidad {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .disponibilidad.disponible {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .disponibilidad.no-disponible {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .descripcion {
+    color: #4b5563;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    font-size: 1.05rem;
+  }
+
+  .caracteristicas,
+  .personalizacion,
+  .tiempo-produccion {
+    margin-bottom: 2rem;
+  }
+
+  .caracteristicas h3,
+  .personalizacion h3,
+  .tiempo-produccion h3 {
+    font-size: 1.1rem;
+    color: #1f2937;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .caracteristicas ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .caracteristicas li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    color: #4b5563;
+  }
+
+  .caracteristicas li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #8b5cf6;
+    font-weight: bold;
+  }
+
+  .opciones-personalizacion {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .opcion-tag {
+    background: #f3e8ff;
+    color: #7c3aed;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+
+  .tiempo-produccion p {
+    color: #4b5563;
+    font-size: 1rem;
+  }
+
+  .tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 2rem 0;
+  }
+
+  .tag {
+    background: #f9fafb;
+    color: #6b7280;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 0.85rem;
+  }
+
+  .cta-container {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    color: white;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 100%;
+    text-align: center;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+  }
+
+  .nota {
+    text-align: center;
+    margin-top: 1rem;
+    color: #6b7280;
+    font-size: 0.9rem;
+  }
+
+  .nota strong {
+    color: #4b5563;
+    font-family: monospace;
+    background: #f3f4f6;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .relacionados {
+    text-align: center;
+    padding: 3rem 0;
+    background: #f9fafb;
+    border-radius: 16px;
+  }
+
+  .relacionados h2 {
+    font-size: 1.5rem;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+
+  .coming-soon {
+    color: #9ca3af;
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    .producto-container {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .info-section h1 {
+      font-size: 1.5rem;
+    }
+
+    .precio {
+      font-size: 1.5rem;
+    }
+  }
+</style>

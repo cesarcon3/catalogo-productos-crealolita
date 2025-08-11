@@ -1,16 +1,245 @@
 ---
+import Layout from '../layouts/Layout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import fs from 'fs';
+import path from 'path';
 
+// Obtener todos los productos
+const productosDir = path.join(process.cwd(), 'src/content/productos');
+const productos = [];
+
+// Leer cada carpeta de producto
+const carpetas = fs.readdirSync(productosDir).filter(item => {
+  const itemPath = path.join(productosDir, item);
+  return fs.statSync(itemPath).isDirectory();
+});
+
+for (const carpeta of carpetas) {
+  const infoPath = path.join(productosDir, carpeta, 'info.json');
+  
+  if (fs.existsSync(infoPath)) {
+    const info = JSON.parse(fs.readFileSync(infoPath, 'utf-8'));
+    
+    // Obtener las imágenes disponibles
+    const productPath = path.join(productosDir, carpeta);
+    const archivos = fs.readdirSync(productPath);
+    const imagenes = archivos
+      .filter(file => file.match(/\.(jpg|jpeg|png|webp)$/i))
+      .sort((a, b) => {
+        const numA = parseInt(a.match(/\d+/)?.[0] || '0');
+        const numB = parseInt(b.match(/\d+/)?.[0] || '0');
+        return numA - numB;
+      });
+    
+    productos.push({
+      ...info,
+      carpeta,
+      primerImagen: imagenes[0] || '1.jpg'
+    });
+  }
+}
+
+// Ordenar productos: destacados primero, luego por nombre
+productos.sort((a, b) => {
+  if (a.destacado && !b.destacado) return -1;
+  if (!a.destacado && b.destacado) return 1;
+  return a.nombre.localeCompare(b.nombre);
+});
+
+// Agrupar por categorías
+const categorias = {
+  quinceanos: productos.filter(p => p.categoria === 'quinceanos'),
+  otros: productos.filter(p => p.categoria !== 'quinceanos')
+};
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Catálogo de Productos">
+  <!-- Hero Section -->
+  <section class="hero">
+    <h2>✨ Productos Únicos en MDF</h2>
+    <p>Cada pieza es diseñada y elaborada con dedicación para hacer tu evento especial</p>
+  </section>
+
+  <!-- Productos Destacados -->
+  {productos.some(p => p.destacado) && (
+    <section class="productos-section">
+      <h2 class="section-title">⭐ Productos Destacados</h2>
+      <div class="productos-grid">
+        {productos
+          .filter(p => p.destacado)
+          .map(producto => (
+            <ProductCard
+              id={producto.id}
+              nombre={producto.nombre}
+              precio={producto.precio}
+              moneda={producto.moneda}
+              descripcion={producto.descripcion}
+              imagen={producto.primerImagen}
+              destacado={producto.destacado}
+              tags={producto.tags}
+            />
+          ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Productos para Quinceaños -->
+  {categorias.quinceanos.length > 0 && (
+    <section class="productos-section">
+      <h2 class="section-title">👑 Especial Quinceañeras</h2>
+      <p class="section-description">
+        Recuerdos perfectos para ese día tan especial. Personalizamos cada detalle con el nombre y fecha de tu evento.
+      </p>
+      <div class="productos-grid">
+        {categorias.quinceanos.map(producto => (
+          <ProductCard
+            id={producto.id}
+            nombre={producto.nombre}
+            precio={producto.precio}
+            moneda={producto.moneda}
+            descripcion={producto.descripcion}
+            imagen={producto.primerImagen}
+            destacado={producto.destacado}
+            tags={producto.tags}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Otros Productos -->
+  {categorias.otros.length > 0 && (
+    <section class="productos-section">
+      <h2 class="section-title">🎨 Más Productos</h2>
+      <div class="productos-grid">
+        {categorias.otros.map(producto => (
+          <ProductCard
+            id={producto.id}
+            nombre={producto.nombre}
+            precio={producto.precio}
+            moneda={producto.moneda}
+            descripcion={producto.descripcion}
+            imagen={producto.primerImagen}
+            destacado={producto.destacado}
+            tags={producto.tags}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>¿Tienes una idea especial?</h2>
+      <p>Podemos crear diseños personalizados según tus necesidades</p>
+      <a href="#" class="cta-button">Contáctanos por WhatsApp</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: 3rem 0;
+    background: linear-gradient(135deg, #f3e8ff 0%, #fce7f3 100%);
+    border-radius: 16px;
+    margin-bottom: 3rem;
+  }
+
+  .hero h2 {
+    font-size: 2.5rem;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+    color: #6b7280;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .productos-section {
+    margin-bottom: 4rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  .section-description {
+    text-align: center;
+    color: #6b7280;
+    margin-bottom: 2rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .productos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .cta-section {
+    background: linear-gradient(135deg, #8b5cf6, #ec4899);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-top: 4rem;
+  }
+
+  .cta-content h2 {
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .cta-content p {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: white;
+    color: #8b5cf6;
+    padding: 12px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    .hero h2 {
+      font-size: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+    }
+
+    .productos-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .cta-section {
+      padding: 2rem 1rem;
+    }
+  }
+</style>
