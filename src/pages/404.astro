@@ -13,12 +13,12 @@ import Layout from '../layouts/Layout.astro';
       
       <div class="error-illustration">
         <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="100" cy="100" r="80" stroke="#8b5cf6" stroke-width="3" stroke-dasharray="10 5" opacity="0.3"/>
-          <rect x="60" y="60" width="80" height="80" rx="8" fill="#f3e8ff"/>
-          <path d="M80 90 Q100 70 120 90" stroke="#8b5cf6" stroke-width="3" stroke-linecap="round" fill="none"/>
-          <circle cx="85" cy="100" r="5" fill="#8b5cf6"/>
-          <circle cx="115" cy="100" r="5" fill="#8b5cf6"/>
-          <path d="M85 120 Q100 110 115 120" stroke="#8b5cf6" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <circle cx="100" cy="100" r="80" stroke="#D4AF37" stroke-width="3" stroke-dasharray="10 5" opacity="0.3"/>
+          <rect x="60" y="60" width="80" height="80" rx="8" fill="#FDE2EC"/>
+          <path d="M80 90 Q100 70 120 90" stroke="#D4AF37" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <circle cx="85" cy="100" r="5" fill="#D4AF37"/>
+          <circle cx="115" cy="100" r="5" fill="#D4AF37"/>
+          <path d="M85 120 Q100 110 115 120" stroke="#D4AF37" stroke-width="3" stroke-linecap="round" fill="none"/>
         </svg>
       </div>
       
@@ -26,7 +26,7 @@ import Layout from '../layouts/Layout.astro';
         <a href="/" class="btn-home">
           ← Volver al catálogo
         </a>
-        <a href="#" class="btn-contact">
+        <a href="https://api.whatsapp.com/send?phone=584161452966&text=Hola%2C%20necesito%20ayuda%20para%20encontrar%20un%20producto%20en%20el%20catálogo" class="btn-contact" target="_blank">
           💬 Contáctanos
         </a>
       </div>
@@ -60,7 +60,7 @@ import Layout from '../layouts/Layout.astro';
   .error-code {
     font-size: 6rem;
     font-weight: 900;
-    background: linear-gradient(135deg, #8b5cf6, #ec4899);
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -70,12 +70,12 @@ import Layout from '../layouts/Layout.astro';
 
   .error-title {
     font-size: 1.8rem;
-    color: #1f2937;
+    color: var(--text);
     margin: 1rem 0;
   }
 
   .error-message {
-    color: #6b7280;
+    color: var(--text-light);
     font-size: 1.1rem;
     margin-bottom: 2rem;
     line-height: 1.6;
@@ -104,44 +104,46 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .btn-home {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
     color: white;
     padding: 12px 24px;
-    border-radius: 8px;
+    border-radius: 25px;
     text-decoration: none;
     font-weight: 600;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px var(--shadow);
   }
 
   .btn-home:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 6px 20px var(--shadow);
   }
 
   .btn-contact {
-    background: white;
-    color: #8b5cf6;
+    background: var(--cream-2);
+    color: var(--gold-dark);
     padding: 12px 24px;
-    border-radius: 8px;
+    border-radius: 25px;
     text-decoration: none;
     font-weight: 600;
-    border: 2px solid #8b5cf6;
-    transition: all 0.3s;
+    border: 2px solid var(--gold);
+    transition: all 0.3s ease;
   }
 
   .btn-contact:hover {
-    background: #f3e8ff;
+    background: var(--gold-ultra-light);
     transform: translateY(-2px);
+    box-shadow: 0 4px 15px var(--shadow);
   }
 
   .suggestions {
     margin-top: 3rem;
     padding-top: 2rem;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--border);
   }
 
   .suggestions p {
-    color: #6b7280;
+    color: var(--text-light);
     margin-bottom: 1rem;
     font-weight: 500;
   }
@@ -154,7 +156,7 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .suggestions li {
-    color: #6b7280;
+    color: var(--text-light);
     padding: 0.5rem 0;
     position: relative;
     padding-left: 1.5rem;
@@ -164,7 +166,7 @@ import Layout from '../layouts/Layout.astro';
     content: "→";
     position: absolute;
     left: 0;
-    color: #8b5cf6;
+    color: var(--gold);
   }
 
   @media (max-width: 768px) {

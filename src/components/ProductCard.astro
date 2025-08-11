@@ -25,12 +25,12 @@ const {
   precioUnidad
 } = Astro.props;
 
-// Configuración de GitHub
+
 const githubUser = "cesarcon3";
 const githubRepo = "catalogo-productos-crealolita";
 const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/main/src/content/productos/${id}/${imagen}`;
 
-// Calcular precio unitario si es por docena
+
 const precioUnitarioCalculado = ventaPor === 'docena' ? (precio / 12).toFixed(2) : null;
 const precioMostrar = precioUnidad || precioUnitarioCalculado;
 ---
@@ -193,12 +193,12 @@ const precioMostrar = precioUnidad || precioUnitarioCalculado;
   }
   
   .tag {
-    font-size: 0.75rem;
-    color: var(--gold-dark, #8B6914);
-    background: var(--pink-light, #FCE4EC);
-    padding: 4px 10px;
-    border-radius: 15px;
-    font-weight: 500;
+  font-size: 0.75rem;
+  color: #2D2416; /* Texto muy oscuro */
+  background: #F5F0E8; /* Fondo dorado muy claro */
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-weight: 500;
   }
   
   .price-section {

@@ -45,6 +45,10 @@ export function getStaticPaths() {
 
 const { id } = Astro.params;
 const { producto, imagenes } = Astro.props;
+
+// Crear el mensaje de WhatsApp con la información del producto
+const whatsappMessage = `Hola! Me interesa el producto "${producto.nombre}" (Código: ${producto.id}) que vi en su catálogo. ¿Podrían darme más información?`;
+const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${encodeURIComponent(whatsappMessage)}`;
 ---
 
 <Layout title={producto.nombre} description={producto.descripcion}>
@@ -53,7 +57,6 @@ const { producto, imagenes } = Astro.props;
   </div>
 
   <div class="producto-container">
-    <!-- Galería de imágenes -->
     <div class="galeria-section">
       <ProductGallery 
         productId={producto.id}
@@ -62,7 +65,6 @@ const { producto, imagenes } = Astro.props;
       />
     </div>
 
-    <!-- Información del producto -->
     <div class="info-section">
       <h1>{producto.nombre}</h1>
       
@@ -79,7 +81,6 @@ const { producto, imagenes } = Astro.props;
 
       <p class="descripcion">{producto.descripcion}</p>
 
-      <!-- Características -->
       {producto.caracteristicas && producto.caracteristicas.length > 0 && (
         <div class="caracteristicas">
           <h3>📋 Características</h3>
@@ -91,7 +92,6 @@ const { producto, imagenes } = Astro.props;
         </div>
       )}
 
-      <!-- Personalización -->
       {producto.personalizacion?.disponible && (
         <div class="personalizacion">
           <h3>✨ Personalización disponible</h3>
@@ -103,7 +103,6 @@ const { producto, imagenes } = Astro.props;
         </div>
       )}
 
-      <!-- Tiempo de producción -->
       {producto.tiempoProduccion && (
         <div class="tiempo-produccion">
           <h3>⏱️ Tiempo de producción</h3>
@@ -111,7 +110,6 @@ const { producto, imagenes } = Astro.props;
         </div>
       )}
 
-      <!-- Tags -->
       {producto.tags && producto.tags.length > 0 && (
         <div class="tags-container">
           {producto.tags.map(tag => (
@@ -120,21 +118,14 @@ const { producto, imagenes } = Astro.props;
         </div>
       )}
 
-      <!-- CTA -->
       <div class="cta-container">
-        <a href="#" class="btn-primary">
-          💬 Solicitar por WhatsApp
+        <a href={whatsappUrl} class="btn-primary" target="_blank">
+          💬 Consultar por WhatsApp
         </a>
-        <p class="nota">Menciona el código: <strong>{producto.id}</strong></p>
       </div>
     </div>
   </div>
 
-  <!-- Productos relacionados (placeholder) -->
-  <section class="relacionados">
-    <h2>También te puede interesar</h2>
-    <p class="coming-soon">Más productos próximamente...</p>
-  </section>
 </Layout>
 
 <style>
@@ -143,7 +134,7 @@ const { producto, imagenes } = Astro.props;
   }
 
   .breadcrumb a {
-    color: #8b5cf6;
+    color: var(--gold);
     text-decoration: none;
     font-size: 0.95rem;
     transition: opacity 0.3s;
@@ -151,6 +142,7 @@ const { producto, imagenes } = Astro.props;
 
   .breadcrumb a:hover {
     opacity: 0.8;
+    color: var(--gold-dark);
   }
 
   .producto-container {
@@ -162,7 +154,7 @@ const { producto, imagenes } = Astro.props;
 
   .info-section h1 {
     font-size: 2rem;
-    color: #1f2937;
+    color: var(--text);
     margin-bottom: 1rem;
     line-height: 1.2;
   }
@@ -173,13 +165,13 @@ const { producto, imagenes } = Astro.props;
     gap: 1rem;
     margin-bottom: 1.5rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border);
   }
 
   .precio {
     font-size: 2rem;
     font-weight: 700;
-    color: #8b5cf6;
+    color: var(--gold);
   }
 
   .disponibilidad {
@@ -200,7 +192,7 @@ const { producto, imagenes } = Astro.props;
   }
 
   .descripcion {
-    color: #4b5563;
+    color: var(--text-light);
     line-height: 1.7;
     margin-bottom: 2rem;
     font-size: 1.05rem;
@@ -216,7 +208,7 @@ const { producto, imagenes } = Astro.props;
   .personalizacion h3,
   .tiempo-produccion h3 {
     font-size: 1.1rem;
-    color: #1f2937;
+    color: var(--text);
     margin-bottom: 0.75rem;
     display: flex;
     align-items: center;
@@ -232,14 +224,14 @@ const { producto, imagenes } = Astro.props;
     padding: 0.5rem 0;
     padding-left: 1.5rem;
     position: relative;
-    color: #4b5563;
+    color: var(--text-light);
   }
 
   .caracteristicas li::before {
     content: "✓";
     position: absolute;
     left: 0;
-    color: #8b5cf6;
+    color: var(--gold);
     font-weight: bold;
   }
 
@@ -250,15 +242,16 @@ const { producto, imagenes } = Astro.props;
   }
 
   .opcion-tag {
-    background: #f3e8ff;
-    color: #7c3aed;
+    background: #F5F0E8;
+    color: #2D2416;
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 0.9rem;
+    border: 1px solid var(--border);
   }
 
   .tiempo-produccion p {
-    color: #4b5563;
+    color: var(--text-light);
     font-size: 1rem;
   }
 
@@ -270,17 +263,18 @@ const { producto, imagenes } = Astro.props;
   }
 
   .tag {
-    background: #f9fafb;
-    color: #6b7280;
+    background: var(--cream-2);
+    color: var(--text-light);
     padding: 4px 12px;
     border-radius: 16px;
     font-size: 0.85rem;
+    border: 1px solid var(--border);
   }
 
   .cta-container {
     margin-top: 2.5rem;
     padding-top: 2rem;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--border);
   }
 
   .btn-primary {
@@ -288,50 +282,38 @@ const { producto, imagenes } = Astro.props;
     background: linear-gradient(135deg, #25d366, #128c7e);
     color: white;
     padding: 14px 32px;
-    border-radius: 8px;
+    border-radius: 25px;
     text-decoration: none;
     font-size: 1.1rem;
     font-weight: 600;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: all 0.3s ease;
     width: 100%;
     text-align: center;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
   }
 
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
-  }
-
-  .nota {
-    text-align: center;
-    margin-top: 1rem;
-    color: #6b7280;
-    font-size: 0.9rem;
-  }
-
-  .nota strong {
-    color: #4b5563;
-    font-family: monospace;
-    background: #f3f4f6;
-    padding: 2px 6px;
-    border-radius: 4px;
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    background: linear-gradient(135deg, #128c7e, #0d7c6f);
   }
 
   .relacionados {
     text-align: center;
     padding: 3rem 0;
-    background: #f9fafb;
+    background: var(--cream-3);
     border-radius: 16px;
+    border: 1px solid var(--border);
   }
 
   .relacionados h2 {
     font-size: 1.5rem;
-    color: #1f2937;
+    color: var(--text);
     margin-bottom: 1rem;
   }
 
   .coming-soon {
-    color: #9ca3af;
+    color: var(--text-light);
     font-style: italic;
   }
 

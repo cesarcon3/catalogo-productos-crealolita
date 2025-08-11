@@ -7,9 +7,8 @@ export interface Props {
 
 const { productId, images, productName } = Astro.props;
 
-// Configuración de GitHub
-const githubUser = "cesarcon3"; // CAMBIAR por tu usuario de GitHub
-const githubRepo = "catalogo-productos-crealolita"; // CAMBIAR si usas otro nombre
+const githubUser = "cesarcon3";
+const githubRepo = "catalogo-productos-crealolita";
 const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/main/src/content/productos/${productId}/`;
 ---
 
@@ -20,7 +19,7 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
       src={`${baseUrl}${images[0]}`}
       alt={`${productName} - Vista principal`}
       class="main-image"
-      onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'600\' height=\'400\' viewBox=\'0 0 600 400\'%3E%3Crect width=\'600\' height=\'400\' fill=\'%23f3f4f6\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'system-ui\' font-size=\'24\' fill=\'%239ca3af\'%3EImagen no disponible%3C/text%3E%3C/svg%3E'"
+      onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'600\' height=\'400\' viewBox=\'0 0 600 400\'%3E%3Crect width=\'600\' height=\'400\' fill=\'%23FAF3E0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Georgia, serif\' font-size=\'24\' fill=\'%236B6B6B\'%3EImagen no disponible%3C/text%3E%3C/svg%3E'"
     />
     <div class="zoom-hint">🔍 Click para ampliar</div>
   </div>
@@ -38,15 +37,14 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
             src={`${baseUrl}${image}`}
             alt={`${productName} - Vista ${index + 1}`}
             loading="lazy"
-            onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23f3f4f6\'/%3E%3C/svg%3E'"
+            onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%23FAF3E0\'/%3E%3C/svg%3E'"
           />
-        </button>
+        </button> 
       ))}
     </div>
   )}
 </div>
 
-<!-- Modal para imagen ampliada -->
 <div id="imageModal" class="modal">
   <span class="close">&times;</span>
   <img class="modal-content" id="modalImage" alt="Imagen ampliada">
@@ -62,10 +60,11 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
   
   .main-image-container {
     position: relative;
-    background: #f9fafb;
+    background: var(--cream-2);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px var(--shadow);
+    border: 1px solid var(--border);
   }
   
   .main-image {
@@ -73,7 +72,7 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
     height: 400px;
     object-fit: contain;
     cursor: zoom-in;
-    transition: transform 0.3s;
+    transition: transform 0.3s ease;
   }
   
   .main-image:hover {
@@ -84,14 +83,15 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
     position: absolute;
     bottom: 12px;
     right: 12px;
-    background: rgba(0, 0, 0, 0.7);
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
     color: white;
     padding: 6px 12px;
     border-radius: 20px;
     font-size: 0.85rem;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 2px 8px var(--shadow);
   }
   
   .main-image-container:hover .zoom-hint {
@@ -105,12 +105,12 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
   }
   
   .thumbnail {
-    border: 2px solid transparent;
+    border: 2px solid var(--border);
     border-radius: 8px;
     overflow: hidden;
     cursor: pointer;
-    background: #f9fafb;
-    transition: all 0.3s;
+    background: var(--cream-2);
+    transition: all 0.3s ease;
     padding: 0;
     height: 80px;
   }
@@ -122,13 +122,14 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
   }
   
   .thumbnail:hover {
-    border-color: #8b5cf6;
+    border-color: var(--gold);
     transform: scale(1.05);
+    box-shadow: 0 2px 8px var(--shadow);
   }
   
   .thumbnail.active {
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
   }
   
   /* Modal styles */
@@ -141,7 +142,7 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
-    animation: fadeIn 0.3s;
+    animation: fadeIn 0.3s ease;
   }
   
   .modal-content {
@@ -150,7 +151,8 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
     max-width: 90%;
     max-height: 90vh;
     margin-top: 2rem;
-    animation: zoomIn 0.3s;
+    animation: zoomIn 0.3s ease;
+    border-radius: 8px;
   }
   
   .modal-caption {
@@ -159,8 +161,9 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
     width: 80%;
     max-width: 700px;
     text-align: center;
-    color: #ccc;
+    color: var(--cream-2);
     padding: 10px 0;
+    font-family: 'Georgia', 'Times New Roman', serif;
   }
   
   .close {
@@ -171,11 +174,11 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
     font-size: 40px;
     font-weight: bold;
     cursor: pointer;
-    transition: color 0.3s;
+    transition: color 0.3s ease;
   }
   
   .close:hover {
-    color: #8b5cf6;
+    color: var(--gold);
   }
   
   @keyframes fadeIn {
@@ -200,11 +203,16 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
     .thumbnail {
       height: 60px;
     }
+    
+    .close {
+      top: 10px;
+      right: 20px;
+      font-size: 30px;
+    }
   }
 </style>
 
 <script>
-  // Cambiar imagen principal al hacer click en miniaturas
   const thumbnails = document.querySelectorAll('.thumbnail');
   const mainImage = document.getElementById('mainImage') as HTMLImageElement;
   
@@ -213,15 +221,12 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
       const newSrc = this.getAttribute('data-image');
       if (newSrc && mainImage) {
         mainImage.src = newSrc;
-        
-        // Actualizar clase active
         thumbnails.forEach(t => t.classList.remove('active'));
         this.classList.add('active');
       }
     });
   });
   
-  // Modal para ampliar imagen
   const modal = document.getElementById('imageModal');
   const modalImg = document.getElementById('modalImage') as HTMLImageElement;
   const caption = document.getElementById('caption');
@@ -243,7 +248,6 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
     });
   }
   
-  // Cerrar modal al hacer click fuera
   if (modal) {
     modal.addEventListener('click', function(e) {
       if (e.target === modal) {
@@ -252,7 +256,6 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
     });
   }
   
-  // Cerrar con ESC
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && modal) {
       modal.style.display = 'none';
