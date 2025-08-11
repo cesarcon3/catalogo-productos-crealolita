@@ -1,72 +1,161 @@
 {
   "siteName": "Creaciones Lolita",
   "siteUrl": "https://creacioneslolita.com",
-  "defaultDescription": "Productos personalizados en MDF con corte y grabado láser. Recuerdos únicos para quinceañeras, bodas y eventos especiales en Venezuela.",
-  "defaultImage": "/images/og-image.jpg",
+  "defaultDescription": "Especialistas en productos personalizados en MDF con corte y grabado láser de alta precisión. Creamos piezas únicas y artesanales para decoración, regalos y proyectos especiales en Venezuela.",
+  "defaultImage": "/og-image.jpg",
   "logo": "/logo.webp",
   "language": "es",
-  "locale": "es_ES",
+  "locale": "es-VE",
   "timezone": "America/Caracas",
   
   "whatsapp": {
     "number": "584161452966",
-    "message": "Hola! Me interesa conocer más sobre los productos de Creaciones Lolita",
-    "displayNumber": "+58 416-1452966"
+    "message": "Hola, me gustaría obtener información acerca de",
+    "displayNumber": "+58 416 145-2966"
   },
   
   "social": {
-    "instagram": "https://instagram.com/creacioneslolita",
-    "facebook": "https://facebook.com/creacioneslolita",
+    "instagram": "https://www.instagram.com/crealolita/",
+    "facebook": "https://www.facebook.com/people/Crealolita-Diseños-Personalizados-Regalos-Creativos/61578079074035/",
     "tiktok": "",
     "youtube": ""
   },
   
-  "keywords": [
-    "MDF personalizado",
-    "recuerdos quinceañeras",
-    "grabado láser",
-    "productos artesanales",
-    "Venezuela",
-    "decoración eventos",
-    "recuerdos bodas",
-    "regalos personalizados",
-    "corte láser",
-    "madera MDF",
-    "artesanías venezolanas",
-    "eventos especiales",
-    "diseños únicos",
-    "personalización láser"
-  ],
-  
   "business": {
-    "type": "Local Business",
+    "type": "LocalBusiness",
+    "name": "Creaciones Lolita",
+    "legalName": "Creaciones Lolita",
+    "description": "Especialistas en productos personalizados en MDF con corte y grabado láser de alta precisión. Creamos piezas únicas y artesanales para decoración, regalos y proyectos especiales.",
+    "foundingDate": "2020",
+    "priceRange": "$$",
+    "paymentAccepted": ["Cash", "Credit Card", "Debit Card", "Bank Transfer", "Mobile Payment"],
+    "currenciesAccepted": "USD,VES",
+    "sameAs": [
+      "https://www.instagram.com/crealolita/",
+      "https://www.facebook.com/people/Crealolita-Diseños-Personalizados-Regalos-Creativos/61578079074035/"
+    ],
+    "contactPoint": {
+      "telephone": "+58-416-145-2966",
+      "contactType": "customer service",
+      "availableLanguage": "Spanish"
+    },
     "address": {
+      "addressCountry": "VE",
+      "addressRegion": "Venezuela",
       "country": "Venezuela",
-      "region": "Región de tu negocio",
-      "city": "Tu ciudad"
+      "region": "Venezuela",
+      "city": ""
     },
     "hours": {
       "monday": "09:00-18:00",
-      "tuesday": "09:00-18:00",
+      "tuesday": "09:00-18:00", 
       "wednesday": "09:00-18:00",
       "thursday": "09:00-18:00",
       "friday": "09:00-18:00",
-      "saturday": "09:00-15:00",
-      "sunday": "Cerrado"
+      "saturday": "09:00-14:00",
+      "sunday": "closed"
     },
     "email": "info@creacioneslolita.com"
   },
   
   "seo": {
     "author": "Creaciones Lolita",
+    "creator": "Creaciones Lolita",
+    "publisher": "Creaciones Lolita",
     "robots": "index, follow",
-    "googleSiteVerification": "tu-codigo-de-google-verification",
-    "bingVerification": "tu-codigo-de-bing-verification"
+    "defaultTitle": "Creaciones Lolita - Corte y Grabado Láser en MDF",
+    "titleTemplate": "%s | Creaciones Lolita",
+    "keywords": [
+      "corte láser MDF",
+      "grabado láser Venezuela",
+      "productos personalizados MDF",
+      "decoración láser",
+      "regalos personalizados",
+      "artesanías MDF",
+      "corte CNC Venezuela",
+      "diseños personalizados",
+      "creaciones artesanales",
+      "productos únicos Venezuela"
+    ],
+    "googleSiteVerification": "",
+    "bingVerification": "",
+    "yandexVerification": ""
+  },
+  
+  "images": {
+    "logo": "/logo.webp",
+    "logoAlt": "Logo Creaciones Lolita - Corte y Grabado Láser",
+    "ogImage": "/og-image.jpg",
+    "ogImageAlt": "Creaciones Lolita - Productos Personalizados en MDF",
+    "favicon": "/favicon.svg",
+    "appleTouchIcon": "/apple-touch-icon.png",
+    "maskIconColor": "#D4AF37"
   },
   
   "analytics": {
-    "googleAnalytics": "G-XXXXXXXXXX",
-    "facebookPixel": "",
-    "hotjar": ""
+    "googleAnalytics": "",
+    "googleTagManager": "",
+    "facebookPixel": ""
+  },
+  
+  "features": {
+    "analytics": {
+      "googleAnalytics": "",
+      "googleTagManager": "",
+      "facebookPixel": ""
+    },
+    "search": {
+      "googleSiteVerification": "",
+      "bingVerification": "",
+      "yandexVerification": ""
+    }
+  },
+  
+  "products": {
+    "categories": [
+      {
+        "name": "Decoración",
+        "slug": "decoracion",
+        "description": "Piezas decorativas únicas en MDF con corte y grabado láser",
+        "keywords": ["decoración MDF", "arte láser", "decoración hogar"]
+      },
+      {
+        "name": "Regalos Personalizados", 
+        "slug": "regalos-personalizados",
+        "description": "Regalos únicos y personalizados para ocasiones especiales",
+        "keywords": ["regalos personalizados", "regalos únicos", "obsequios especiales"]
+      },
+      {
+        "name": "Proyectos Especiales",
+        "slug": "proyectos-especiales", 
+        "description": "Proyectos personalizados y a medida según tus necesidades",
+        "keywords": ["proyectos personalizados", "diseños a medida", "trabajos especiales"]
+      }
+    ],
+    "materials": [
+      {
+        "name": "MDF 3mm",
+        "description": "Material de alta calidad para corte y grabado láser preciso"
+      }
+    ],
+    "techniques": [
+      {
+        "name": "Corte Láser",
+        "description": "Corte de precisión con tecnología láser avanzada"
+      },
+      {
+        "name": "Grabado Láser", 
+        "description": "Grabado detallado y personalizado en MDF"
+      }
+    ]
+  },
+  
+  "schema": {
+    "breadcrumbs": true,
+    "product": true,
+    "organization": true,
+    "localBusiness": true,
+    "website": true,
+    "faq": true
   }
 }
