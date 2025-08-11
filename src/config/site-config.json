@@ -1,0 +1,24 @@
+{
+  "siteName": "Creaciones Lolita",
+  "siteUrl": "https://creacioneslolita.com",
+  "defaultDescription": "Productos personalizados en MDF con corte y grabado láser. Recuerdos únicos para quinceañeras, bodas y eventos especiales.",
+  "defaultImage": "/images/og-image.jpg",
+  "logo": "/images/logo-creaciones-lolita.svg",
+  "whatsapp": {
+    "number": "584161452966",
+    "message": "Hola! Me interesa conocer más sobre los productos de Creaciones Lolita",
+    "displayNumber": "+58 416-1452966"
+  },
+  "social": {
+    "instagram": "https://instagram.com/creacioneslolita",
+    "facebook": "https://facebook.com/creacioneslolita"
+  },
+  "keywords": [
+    "MDF personalizado",
+    "recuerdos quinceañeras",
+    "grabado láser",
+    "productos artesanales",
+    "Venezuela",
+    "decoración eventos"
+  ]
+}

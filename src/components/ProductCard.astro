@@ -8,14 +8,31 @@ export interface Props {
   imagen: string;
   destacado?: boolean;
   tags?: string[];
+  ventaPor?: 'unidad' | 'docena';
+  precioUnidad?: number;
 }
 
-const { id, nombre, precio, moneda, descripcion, imagen, destacado = false, tags = [] } = Astro.props;
+const { 
+  id, 
+  nombre, 
+  precio, 
+  moneda, 
+  descripcion, 
+  imagen, 
+  destacado = false, 
+  tags = [],
+  ventaPor = 'docena',
+  precioUnidad
+} = Astro.props;
 
-// Configuración de GitHub actualizada
+// Configuración de GitHub
 const githubUser = "cesarcon3";
 const githubRepo = "catalogo-productos-crealolita";
 const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/main/src/content/productos/${id}/${imagen}`;
+
+// Calcular precio unitario si es por docena
+const precioUnitarioCalculado = ventaPor === 'docena' ? (precio / 12).toFixed(2) : null;
+const precioMostrar = precioUnidad || precioUnitarioCalculado;
 ---
 
 <article class="product-card">
@@ -26,26 +43,52 @@ const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/
       src={imageUrl} 
       alt={nombre}
       loading="lazy"
-      onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23F5EDE0\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Georgia\' font-size=\'20\' fill=\'%23A68B4A\'%3EImagen próximamente%3C/text%3E%3C/svg%3E'"
+      onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23F5E6D3\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Open Sans\' font-size=\'18\' fill=\'%238B6914\'%3EImagen próximamente%3C/text%3E%3C/svg%3E'"
     />
+    {ventaPor === 'docena' && (
+      <div class="venta-docena-badge">
+        <span>Por Docena</span>
+      </div>
+    )}
   </div>
   
   <div class="content">
     <h3>{nombre}</h3>
     <p class="description">{descripcion.substring(0, 100)}...</p>
     
-    <div class="tags">
-      {tags.slice(0, 3).map(tag => (
-        <span class="tag">#{tag}</span>
-      ))}
+    {tags.length > 0 && (
+      <div class="tags">
+        {tags.slice(0, 3).map(tag => (
+          <span class="tag">#{tag}</span>
+        ))}
+      </div>
+    )}
+    
+    <div class="price-section">
+      <div class="price-main">
+        <span class="currency">{moneda === "USD" ? "$" : moneda}</span>
+        <span class="price">{precio.toFixed(2)}</span>
+        <span class="price-type">/{ventaPor}</span>
+      </div>
+      {ventaPor === 'docena' && precioMostrar && (
+        <div class="price-unit">
+          <span class="unit-label">Precio unitario:</span>
+          <span class="unit-price">{moneda === "USD" ? "$" : moneda}{precioMostrar}</span>
+        </div>
+      )}
     </div>
     
     <div class="footer">
-      <span class="price">
-        {moneda === "USD" ? "$" : moneda} {precio.toFixed(2)}
-      </span>
       <a href={`/producto/${id}`} class="btn-ver">
         Ver detalles →
+      </a>
+      <a href={`https://wa.me/584161452966?text=Hola! Me interesa el producto: ${nombre}`} 
+         target="_blank" 
+         class="btn-whatsapp">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.149-.67.149-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+        </svg>
+        Consultar
       </a>
     </div>
   </div>
@@ -53,43 +96,44 @@ const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/
 
 <style>
   .product-card {
-    background: var(--cream-2);
-    border-radius: 16px;
+    background: var(--white, #FFFFFF);
+    border-radius: var(--radius-lg, 20px);
     overflow: hidden;
-    box-shadow: 0 4px 12px var(--shadow-gold);
+    box-shadow: var(--shadow, 0 2px 8px rgba(43, 25, 17, 0.1));
     transition: all 0.3s ease;
     position: relative;
     height: 100%;
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--border);
+    border: 1px solid var(--beige, #F5E6D3);
   }
   
   .product-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 8px 25px var(--shadow-gold);
-    border-color: var(--gold-light);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg, 0 4px 16px rgba(43, 25, 17, 0.15));
+    border-color: var(--gold-light, #DAA520);
   }
   
   .badge-destacado {
     position: absolute;
     top: 12px;
     right: 12px;
-    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    background: var(--pink, #E91E63);
     color: white;
     padding: 6px 14px;
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 600;
     z-index: 10;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3);
+    font-family: 'Open Sans', sans-serif;
   }
   
   .image-container {
     width: 100%;
     height: 250px;
     overflow: hidden;
-    background: var(--cream-3);
+    background: var(--cream, #FFF8F0);
     position: relative;
   }
   
@@ -101,7 +145,20 @@ const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/
   }
   
   .product-card:hover .image-container img {
-    transform: scale(1.08);
+    transform: scale(1.05);
+  }
+  
+  .venta-docena-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--gold, #B8860B);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(184, 134, 11, 0.3);
   }
   
   .content {
@@ -112,15 +169,16 @@ const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/
   }
   
   .content h3 {
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--text);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--brown-dark, #2B1911);
     margin-bottom: 0.5rem;
     line-height: 1.3;
   }
   
   .description {
-    color: var(--text-light);
+    color: var(--brown, #4A3426);
     font-size: 0.9rem;
     line-height: 1.6;
     margin-bottom: 0.75rem;
@@ -136,42 +194,122 @@ const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/
   
   .tag {
     font-size: 0.75rem;
-    color: var(--gold-dark);
-    background: var(--soft-pink-light);
-    padding: 3px 10px;
+    color: var(--gold-dark, #8B6914);
+    background: var(--pink-light, #FCE4EC);
+    padding: 4px 10px;
     border-radius: 15px;
-    border: 1px solid var(--soft-pink);
+    font-weight: 500;
+  }
+  
+  .price-section {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: var(--cream-light, #FFFBF7);
+    border-radius: var(--radius, 12px);
+    border: 1px solid var(--beige, #F5E6D3);
+  }
+  
+  .price-main {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .currency {
+    font-size: 1rem;
+    color: var(--gold-dark, #8B6914);
+    font-weight: 600;
+  }
+  
+  .price {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--brown-dark, #2B1911);
+    font-family: 'Playfair Display', serif;
+  }
+  
+  .price-type {
+    font-size: 0.9rem;
+    color: var(--brown-light, #6B4E3D);
+    font-style: italic;
+  }
+  
+  .price-unit {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--beige, #F5E6D3);
+  }
+  
+  .unit-label {
+    font-size: 0.85rem;
+    color: var(--brown-light, #6B4E3D);
+  }
+  
+  .unit-price {
+    font-size: 1rem;
+    color: var(--gold-dark, #8B6914);
+    font-weight: 600;
   }
   
   .footer {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    gap: 0.75rem;
     padding-top: 1rem;
-    border-top: 1px solid var(--border);
-  }
-  
-  .price {
-    font-size: 1.35rem;
-    font-weight: 700;
-    color: var(--gold-dark);
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+    border-top: 1px solid var(--beige, #F5E6D3);
   }
   
   .btn-ver {
-    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    flex: 1;
+    background: var(--gold, #B8860B);
     color: white;
-    padding: 8px 18px;
-    border-radius: 20px;
+    padding: 10px 16px;
+    border-radius: var(--radius, 12px);
     text-decoration: none;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 600;
+    text-align: center;
     transition: all 0.3s;
-    box-shadow: 0 2px 8px var(--shadow-gold);
+    box-shadow: 0 2px 8px rgba(184, 134, 11, 0.2);
   }
   
   .btn-ver:hover {
+    background: var(--gold-dark, #8B6914);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--shadow-gold);
+    box-shadow: 0 4px 12px rgba(184, 134, 11, 0.3);
+  }
+  
+  .btn-whatsapp {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 10px 16px;
+    background: #25D366;
+    color: white;
+    border-radius: var(--radius, 12px);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3);
+  }
+  
+  .btn-whatsapp:hover {
+    background: #1DA851;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+  }
+  
+  @media (max-width: 480px) {
+    .footer {
+      flex-direction: column;
+    }
+    
+    .btn-ver,
+    .btn-whatsapp {
+      width: 100%;
+    }
   }
 </style>
