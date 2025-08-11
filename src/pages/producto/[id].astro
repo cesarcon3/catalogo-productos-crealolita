@@ -156,8 +156,16 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
 </Layout>
 
 <style>
+  /* Reset global para prevenir desbordamiento */
+  * {
+    box-sizing: border-box;
+  }
+
   .breadcrumb {
     margin-bottom: 2rem;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
   }
 
   .breadcrumb a {
@@ -177,6 +185,18 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
     grid-template-columns: 1fr 1fr;
     gap: 3rem;
     margin-bottom: 4rem;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .galeria-section,
+  .info-section {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
   }
 
   .info-section h1 {
@@ -184,6 +204,8 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
     color: var(--text);
     margin-bottom: 1rem;
     line-height: 1.2;
+    word-wrap: break-word;
+    max-width: 100%;
   }
 
   .precio-container {
@@ -193,12 +215,16 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
     margin-bottom: 1.5rem;
     padding-bottom: 1.5rem;
     border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .precio {
     font-size: 2rem;
     font-weight: 700;
     color: var(--gold);
+    word-break: break-word;
   }
 
   .disponibilidad {
@@ -206,6 +232,7 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 500;
+    flex-shrink: 0;
   }
 
   .disponibilidad.disponible {
@@ -223,12 +250,16 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
     line-height: 1.7;
     margin-bottom: 2rem;
     font-size: 1.05rem;
+    word-wrap: break-word;
+    max-width: 100%;
   }
 
   .caracteristicas,
   .personalizacion,
   .tiempo-produccion {
     margin-bottom: 2rem;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .caracteristicas h3,
@@ -240,11 +271,14 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    word-wrap: break-word;
   }
 
   .caracteristicas ul {
     list-style: none;
     padding: 0;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .caracteristicas li {
@@ -252,6 +286,8 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
     padding-left: 1.5rem;
     position: relative;
     color: var(--text-light);
+    word-wrap: break-word;
+    max-width: 100%;
   }
 
   .caracteristicas li::before {
@@ -266,6 +302,8 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .opcion-tag {
@@ -275,11 +313,15 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
     border-radius: 20px;
     font-size: 0.9rem;
     border: 1px solid var(--border);
+    word-break: break-word;
+    flex-shrink: 0;
   }
 
   .tiempo-produccion p {
     color: var(--text-light);
     font-size: 1rem;
+    word-wrap: break-word;
+    max-width: 100%;
   }
 
   .tags-container {
@@ -287,6 +329,8 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
     flex-wrap: wrap;
     gap: 0.5rem;
     margin: 2rem 0;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .tag {
@@ -296,16 +340,21 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
     border-radius: 16px;
     font-size: 0.85rem;
     border: 1px solid var(--border);
+    word-break: break-word;
+    flex-shrink: 0;
   }
 
   .cta-container {
     margin-top: 2.5rem;
     padding-top: 2rem;
     border-top: 1px solid var(--border);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .btn-primary {
-    display: inline-block;
+    display: block;
     background: linear-gradient(135deg, #25d366, #128c7e);
     color: white;
     padding: 14px 32px;
@@ -315,8 +364,14 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
     font-weight: 600;
     transition: all 0.3s ease;
     width: 100%;
+    max-width: 100%;
     text-align: center;
     box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    box-sizing: border-box;
+    margin: 0;
+    border: none;
+    outline: none;
+    word-wrap: break-word;
   }
 
   .btn-primary:hover {
@@ -331,6 +386,9 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
     background: var(--cream-3);
     border-radius: 16px;
     border: 1px solid var(--border);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .relacionados h2 {
@@ -344,6 +402,7 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
     font-style: italic;
   }
 
+  /* Tablets en orientación vertical (768px) */
   @media (max-width: 768px) {
     .producto-container {
       grid-template-columns: 1fr;
@@ -351,11 +410,280 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
     }
 
     .info-section h1 {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
     }
 
     .precio {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
+    }
+
+    .precio-container {
+      gap: 0.75rem;
+    }
+
+    .btn-primary {
+      padding: 16px 24px;
+      font-size: 1.05rem;
+    }
+  }
+
+  /* Tablets pequeñas y móviles grandes (640px) */
+  @media (max-width: 640px) {
+    .breadcrumb {
+      margin-bottom: 1.5rem;
+    }
+
+    .producto-container {
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .info-section h1 {
+      font-size: 1.6rem;
+    }
+
+    .precio {
+      font-size: 1.6rem;
+    }
+
+    .precio-container {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .disponibilidad {
+      align-self: flex-start;
+    }
+
+    .descripcion {
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      padding: 16px 20px;
+      font-size: 1rem;
+      border-radius: 20px;
+    }
+
+    .opciones-personalizacion {
+      gap: 0.375rem;
+    }
+
+    .opcion-tag {
+      font-size: 0.85rem;
+      padding: 5px 12px;
+    }
+
+    .tags-container {
+      gap: 0.375rem;
+    }
+
+    .tag {
+      font-size: 0.8rem;
+      padding: 3px 10px;
+    }
+  }
+
+  /* Móviles medianos (480px) */
+  @media (max-width: 480px) {
+    .breadcrumb {
+      margin-bottom: 1.25rem;
+    }
+
+    .producto-container {
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .info-section h1 {
+      font-size: 1.4rem;
+    }
+
+    .precio {
+      font-size: 1.4rem;
+    }
+
+    .precio-container {
+      margin-bottom: 1.25rem;
+      padding-bottom: 1.25rem;
+      gap: 0.5rem;
+    }
+
+    .descripcion {
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .caracteristicas,
+    .personalizacion,
+    .tiempo-produccion {
+      margin-bottom: 1.5rem;
+    }
+
+    .caracteristicas h3,
+    .personalizacion h3,
+    .tiempo-produccion h3 {
+      font-size: 1rem;
+    }
+
+    .caracteristicas li {
+      padding: 0.375rem 0;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary {
+      padding: 14px 16px;
+      font-size: 0.95rem;
+      border-radius: 18px;
+    }
+
+    .cta-container {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+    }
+
+    .opciones-personalizacion {
+      gap: 0.25rem;
+    }
+
+    .opcion-tag {
+      font-size: 0.8rem;
+      padding: 4px 10px;
+    }
+
+    .tags-container {
+      gap: 0.25rem;
+      margin: 1.5rem 0;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+    }
+  }
+
+  /* Móviles pequeños (360px) */
+  @media (max-width: 360px) {
+    .breadcrumb {
+      margin-bottom: 1rem;
+    }
+
+    .breadcrumb a {
+      font-size: 0.9rem;
+    }
+
+    .producto-container {
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-section h1 {
+      font-size: 1.25rem;
+      line-height: 1.3;
+    }
+
+    .precio {
+      font-size: 1.25rem;
+    }
+
+    .precio-container {
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      gap: 0.5rem;
+    }
+
+    .disponibilidad {
+      font-size: 0.85rem;
+      padding: 3px 10px;
+    }
+
+    .descripcion {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .caracteristicas,
+    .personalizacion,
+    .tiempo-produccion {
+      margin-bottom: 1.25rem;
+    }
+
+    .caracteristicas h3,
+    .personalizacion h3,
+    .tiempo-produccion h3 {
+      font-size: 0.95rem;
+      gap: 0.375rem;
+    }
+
+    .caracteristicas li {
+      padding: 0.25rem 0;
+      padding-left: 1.25rem;
+      font-size: 0.85rem;
+    }
+
+    .btn-primary {
+      padding: 12px 14px;
+      font-size: 0.9rem;
+      border-radius: 16px;
+    }
+
+    .cta-container {
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+    }
+
+    .opcion-tag {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+    }
+
+    .tiempo-produccion p {
+      font-size: 0.9rem;
+    }
+  }
+
+  /* Móviles muy pequeños (320px) */
+  @media (max-width: 320px) {
+    .info-section h1 {
+      font-size: 1.1rem;
+    }
+
+    .precio {
+      font-size: 1.1rem;
+    }
+
+    .descripcion {
+      font-size: 0.85rem;
+    }
+
+    .caracteristicas h3,
+    .personalizacion h3,
+    .tiempo-produccion h3 {
+      font-size: 0.9rem;
+    }
+
+    .caracteristicas li {
+      font-size: 0.8rem;
+    }
+
+    .btn-primary {
+      padding: 10px 12px;
+      font-size: 0.85rem;
+    }
+
+    .opcion-tag {
+      font-size: 0.7rem;
+    }
+
+    .tag {
+      font-size: 0.65rem;
     }
   }
 </style>
