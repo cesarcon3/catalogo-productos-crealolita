@@ -19,14 +19,23 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
     
     <style>
       :root {
-        --primary: #8b5cf6;
-        --primary-dark: #7c3aed;
-        --secondary: #ec4899;
-        --text: #1f2937;
-        --text-light: #6b7280;
-        --bg: #ffffff;
-        --bg-gray: #f9fafb;
-        --border: #e5e7eb;
+        /* Paleta de colores principal */
+        --cream-1: #F5F5DC;  /* Base */
+        --cream-2: #FFF8E1;  /* Cards */
+        --cream-3: #FAF3E0;  /* Backgrounds */
+        --gold: #D4AF37;     /* Accents */
+        --gold-dark: #B8941F; /* Gold hover */
+        --soft-pink: #F8C8DC; /* Hover effects */
+        --soft-pink-light: #FDE2EC; /* Light pink backgrounds */
+        
+        /* Colores de texto */
+        --text: #3D3D3D;
+        --text-light: #6B6B6B;
+        --text-on-gold: #FFFFFF;
+        
+        /* Otros */
+        --border: #E8D7C3;
+        --shadow: rgba(212, 175, 55, 0.15);
       }
       
       * {
@@ -36,8 +45,8 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
       }
       
       html {
-        font-family: system-ui, sans-serif;
-        background: var(--bg);
+        font-family: 'Georgia', 'Times New Roman', serif;
+        background: var(--cream-1);
         color: var(--text);
       }
       
@@ -54,16 +63,32 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
       }
       
       header {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-        color: white;
+        background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+        color: var(--text-on-gold);
         padding: 1.5rem 0;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 15px var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        border-radius: 50%;
       }
       
       header h1 {
         font-size: 1.8rem;
         font-weight: 700;
         text-align: center;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        position: relative;
+        z-index: 1;
       }
       
       header p {
@@ -71,16 +96,20 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
         margin-top: 0.5rem;
         opacity: 0.95;
         font-size: 0.95rem;
+        font-style: italic;
+        position: relative;
+        z-index: 1;
       }
       
       main {
         flex: 1;
         padding: 2rem 0;
+        background: var(--cream-1);
       }
       
       footer {
-        background: var(--bg-gray);
-        border-top: 1px solid var(--border);
+        background: var(--cream-3);
+        border-top: 2px solid var(--gold);
         padding: 2rem 0;
         margin-top: 4rem;
       }
@@ -92,11 +121,12 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
       
       footer p {
         margin-bottom: 0.5rem;
+        font-size: 0.95rem;
       }
       
       .social-links {
         display: flex;
-        gap: 1rem;
+        gap: 1.5rem;
         justify-content: center;
         margin-top: 1rem;
       }
@@ -104,18 +134,42 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
       .social-links a {
         color: var(--text-light);
         text-decoration: none;
-        transition: color 0.3s;
+        transition: all 0.3s;
+        font-size: 0.95rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        background: var(--cream-2);
       }
       
       .social-links a:hover {
-        color: var(--primary);
+        color: var(--gold-dark);
+        background: var(--soft-pink-light);
+        transform: translateY(-2px);
+      }
+      
+      /* Estilos globales para botones */
+      :global(.btn-primary) {
+        background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+        display: inline-block;
+        box-shadow: 0 4px 15px var(--shadow);
+      }
+      
+      :global(.btn-primary:hover) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px var(--shadow);
       }
     </style>
   </head>
   <body>
     <header>
       <div class="container">
-        <h1>🎨 MDF Creaciones</h1>
+        <h1>✨ MDF Creaciones</h1>
         <p>Productos personalizados en MDF con corte y grabado láser</p>
       </div>
     </header>
@@ -129,7 +183,7 @@ const { title, description = "Catálogo de productos en MDF con corte y grabado 
     <footer>
       <div class="container">
         <p>© 2024 MDF Creaciones. Todos los derechos reservados.</p>
-        <p>Productos artesanales con amor 💜</p>
+        <p>Productos artesanales con amor 💛</p>
         <div class="social-links">
           <a href="#">WhatsApp</a>
           <a href="#">Instagram</a>

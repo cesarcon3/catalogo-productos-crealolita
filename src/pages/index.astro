@@ -56,8 +56,15 @@ const categorias = {
 <Layout title="Catálogo de Productos">
   <!-- Hero Section -->
   <section class="hero">
-    <h2>✨ Productos Únicos en MDF</h2>
-    <p>Cada pieza es diseñada y elaborada con dedicación para hacer tu evento especial</p>
+    <div class="hero-content">
+      <h2>✨ Productos Únicos en MDF</h2>
+      <p>Cada pieza es diseñada y elaborada con dedicación para hacer tu evento inolvidable</p>
+    </div>
+    <div class="hero-decoration">
+      <span class="decoration-element">💐</span>
+      <span class="decoration-element">👑</span>
+      <span class="decoration-element">💝</span>
+    </div>
   </section>
 
   <!-- Productos Destacados -->
@@ -133,7 +140,7 @@ const categorias = {
     <div class="cta-content">
       <h2>¿Tienes una idea especial?</h2>
       <p>Podemos crear diseños personalizados según tus necesidades</p>
-      <a href="#" class="cta-button">Contáctanos por WhatsApp</a>
+      <a href="#" class="cta-button">💬 Contáctanos por WhatsApp</a>
     </div>
   </section>
 </Layout>
@@ -141,23 +148,79 @@ const categorias = {
 <style>
   .hero {
     text-align: center;
-    padding: 3rem 0;
-    background: linear-gradient(135deg, #f3e8ff 0%, #fce7f3 100%);
-    border-radius: 16px;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, var(--soft-pink-light, #FDE2EC) 0%, var(--cream-3, #FAF3E0) 100%);
+    border-radius: 20px;
     margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.1);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -10%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    right: -5%;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(248, 200, 220, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
   }
 
   .hero h2 {
     font-size: 2.5rem;
-    color: #1f2937;
+    color: var(--text, #3D3D3D);
     margin-bottom: 1rem;
+    font-family: 'Georgia', serif;
+    font-weight: 700;
   }
 
   .hero p {
-    font-size: 1.1rem;
-    color: #6b7280;
+    font-size: 1.15rem;
+    color: var(--text-light, #6B6B6B);
     max-width: 600px;
     margin: 0 auto;
+    font-family: 'Georgia', serif;
+    font-style: italic;
+  }
+
+  .hero-decoration {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .decoration-element {
+    font-size: 2rem;
+    animation: float 3s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 0.3s);
+  }
+
+  .decoration-element:nth-child(1) { --i: 0; }
+  .decoration-element:nth-child(2) { --i: 1; }
+  .decoration-element:nth-child(3) { --i: 2; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
   }
 
   .productos-section {
@@ -166,67 +229,118 @@ const categorias = {
 
   .section-title {
     font-size: 2rem;
-    color: #1f2937;
+    color: var(--text, #3D3D3D);
     margin-bottom: 0.5rem;
     text-align: center;
+    font-family: 'Georgia', serif;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold, #D4AF37), transparent);
   }
 
   .section-description {
     text-align: center;
-    color: #6b7280;
+    color: var(--text-light, #6B6B6B);
     margin-bottom: 2rem;
+    margin-top: 1.5rem;
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
+    font-family: 'Georgia', serif;
+    font-style: italic;
   }
 
   .productos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
-    margin-top: 2rem;
+    margin-top: 2.5rem;
   }
 
   .cta-section {
-    background: linear-gradient(135deg, #8b5cf6, #ec4899);
-    border-radius: 16px;
+    background: linear-gradient(135deg, var(--gold, #D4AF37), var(--gold-dark, #B8941F));
+    border-radius: 20px;
     padding: 3rem 2rem;
     text-align: center;
     margin-top: 4rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .cta-content {
+    position: relative;
+    z-index: 1;
   }
 
   .cta-content h2 {
     color: white;
     font-size: 2rem;
     margin-bottom: 1rem;
+    font-family: 'Georgia', serif;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
   }
 
   .cta-content p {
     color: rgba(255, 255, 255, 0.95);
     font-size: 1.1rem;
     margin-bottom: 2rem;
+    font-family: 'Georgia', serif;
   }
 
   .cta-button {
     display: inline-block;
     background: white;
-    color: #8b5cf6;
-    padding: 12px 32px;
-    border-radius: 8px;
+    color: var(--gold, #D4AF37);
+    padding: 14px 36px;
+    border-radius: 30px;
     text-decoration: none;
     font-weight: 600;
     font-size: 1.1rem;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: all 0.3s;
+    font-family: 'Georgia', serif;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   }
 
   .cta-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: var(--cream-2, #FFF8E1);
   }
 
   @media (max-width: 768px) {
     .hero h2 {
       font-size: 2rem;
+    }
+
+    .hero-decoration {
+      gap: 1rem;
+    }
+
+    .decoration-element {
+      font-size: 1.5rem;
     }
 
     .section-title {
@@ -240,6 +354,10 @@ const categorias = {
 
     .cta-section {
       padding: 2rem 1rem;
+    }
+
+    .cta-content h2 {
+      font-size: 1.5rem;
     }
   }
 </style>
