@@ -216,8 +216,8 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
   const thumbnails = document.querySelectorAll('.thumbnail');
   const mainImage = document.getElementById('mainImage') as HTMLImageElement;
   
-  thumbnails.forEach(thumb => {
-    thumb.addEventListener('click', function() {
+  thumbnails.forEach((thumb) => {
+    thumb.addEventListener('click', function(this: HTMLElement) {
       const newSrc = this.getAttribute('data-image');
       if (newSrc && mainImage) {
         mainImage.src = newSrc;
@@ -233,7 +233,7 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
   const closeBtn = document.querySelector('.close');
   
   if (mainImage && modal && modalImg) {
-    mainImage.addEventListener('click', function() {
+    mainImage.addEventListener('click', function(this: HTMLImageElement) {
       modal.style.display = 'block';
       modalImg.src = this.src;
       if (caption) {
@@ -249,14 +249,14 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
   }
   
   if (modal) {
-    modal.addEventListener('click', function(e) {
+    modal.addEventListener('click', function(e: MouseEvent) {
       if (e.target === modal) {
         modal.style.display = 'none';
       }
     });
   }
   
-  document.addEventListener('keydown', function(e) {
+  document.addEventListener('keydown', function(e: KeyboardEvent) {
     if (e.key === 'Escape' && modal) {
       modal.style.display = 'none';
     }

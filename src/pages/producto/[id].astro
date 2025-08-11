@@ -4,20 +4,47 @@ import ProductGallery from '../../components/ProductGallery.astro';
 import fs from 'fs';
 import path from 'path';
 
-export function getStaticPaths() {
+// Interfaces para tipar los datos del producto
+interface Personalizacion {
+  disponible: boolean;
+  opciones: string[];
+}
+
+interface Producto {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  precio: number;
+  moneda: string;
+  disponible: boolean;
+  caracteristicas?: string[];
+  personalizacion?: Personalizacion;
+  tiempoProduccion?: string;
+  tags?: string[];
+}
+
+interface StaticPath {
+  params: { id: string };
+  props: {
+    producto: Producto;
+    imagenes: string[];
+  };
+}
+
+export function getStaticPaths(): StaticPath[] {
   const productosDir = path.join(process.cwd(), 'src/content/productos');
   const carpetas = fs.readdirSync(productosDir).filter(item => {
     const itemPath = path.join(productosDir, item);
     return fs.statSync(itemPath).isDirectory();
   });
 
-  const paths = [];
+  const paths: StaticPath[] = [];
   
   for (const carpeta of carpetas) {
     const infoPath = path.join(productosDir, carpeta, 'info.json');
     
     if (fs.existsSync(infoPath)) {
-      const info = JSON.parse(fs.readFileSync(infoPath, 'utf-8'));
+      const info: Producto = JSON.parse(fs.readFileSync(infoPath, 'utf-8'));
       
       // Obtener las imágenes
       const productPath = path.join(productosDir, carpeta);
@@ -44,7 +71,7 @@ export function getStaticPaths() {
 }
 
 const { id } = Astro.params;
-const { producto, imagenes } = Astro.props;
+const { producto, imagenes }: { producto: Producto; imagenes: string[] } = Astro.props;
 
 // Crear el mensaje de WhatsApp con la información del producto
 const whatsappMessage = `Hola! Me interesa el producto "${producto.nombre}" (Código: ${producto.id}) que vi en su catálogo. ¿Podrían darme más información?`;
@@ -85,7 +112,7 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
         <div class="caracteristicas">
           <h3>📋 Características</h3>
           <ul>
-            {producto.caracteristicas.map(caracteristica => (
+            {producto.caracteristicas.map((caracteristica: string) => (
               <li>{caracteristica}</li>
             ))}
           </ul>
@@ -96,7 +123,7 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
         <div class="personalizacion">
           <h3>✨ Personalización disponible</h3>
           <div class="opciones-personalizacion">
-            {producto.personalizacion.opciones.map(opcion => (
+            {producto.personalizacion.opciones.map((opcion: string) => (
               <span class="opcion-tag">{opcion}</span>
             ))}
           </div>
@@ -112,7 +139,7 @@ const whatsappUrl = `https://api.whatsapp.com/send?phone=584161452966&text=${enc
 
       {producto.tags && producto.tags.length > 0 && (
         <div class="tags-container">
-          {producto.tags.map(tag => (
+          {producto.tags.map((tag: string) => (
             <span class="tag">#{tag}</span>
           ))}
         </div>
