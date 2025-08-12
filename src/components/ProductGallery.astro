@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 
 export interface Props {
   productId: string;
@@ -7,43 +8,77 @@ export interface Props {
   productName: string;
 }
 
+// Interfaz para los datos de imagen
+interface ImageData {
+  src: ImageMetadata;
+  name: string;
+  alt: string;
+}
+
 const { productId, images, productName } = Astro.props;
 
-const githubUser = "cesarcon3";
-const githubRepo = "catalogo-productos-crealolita";
-const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/main/src/content/productos/${productId}/`;
+// Función para importar todas las imágenes del producto
+const imageImports: ImageData[] = [];
+for (const imageName of images) {
+  try {
+    const imageModules = import.meta.glob('/src/content/productos/*/*.{png,jpg,jpeg,webp,avif}');
+    const imagePath = `/src/content/productos/${productId}/${imageName}`;
+    
+    if (imageModules[imagePath]) {
+      const imageModule = await imageModules[imagePath]() as { default: ImageMetadata };
+      imageImports.push({
+        src: imageModule.default,
+        name: imageName,
+        alt: `${productName} - ${imageName}`
+      });
+    }
+  } catch (error) {
+    console.warn(`No se pudo cargar la imagen: /src/content/productos/${productId}/${imageName}`);
+  }
+}
 
 ---
 
 <div class="gallery-container">
   <div class="main-image-container">
-    <Image 
-      id="mainImage"
-      src={`${baseUrl}${images[0]}`}
-      alt={`${productName} - Vista principal`}
-      width={600}
-      height={400}
-      class="main-image"
-    />
+    {imageImports.length > 0 ? (
+      <Image 
+        id="mainImage"
+        src={imageImports[0].src}
+        alt={`${productName} - Vista principal`}
+        width={600}
+        height={400}
+        class="main-image"
+        format="webp"
+        quality={90}
+        widths={[400, 600, 800]}
+        sizes="(max-width: 768px) 400px, (max-width: 1200px) 600px, 800px"
+      />
+    ) : (
+      <div class="placeholder-main-image">
+        <span>Imagen no disponible</span>
+      </div>
+    )}
     <div class="zoom-hint">🔍 Click para ampliar</div>
   </div>
   
-  {images.length > 1 && (
+  {imageImports.length > 1 && (
     <div class="thumbnails">
-      {images.map((image, index) => (
+      {imageImports.map((imageData, index) => (
         <button
           class={`thumbnail ${index === 0 ? 'active' : ''}`}
-          data-image={`${baseUrl}${image}`}
           data-index={index}
           aria-label={`Ver imagen ${index + 1}`}
         >
           <Image 
-            src={`${baseUrl}${image}`}
-            alt={`${productName} - Vista ${index + 1}`}
+            src={imageData.src}
+            alt={imageData.alt}
             width={100}
             height={100}
             loading="lazy"
             class="thumbnail-image"
+            format="webp"
+            quality={75}
           />
         </button> 
       ))}
@@ -66,11 +101,11 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
   
   .main-image-container {
     position: relative;
-    background: var(--cream-2);
+    background: var(--cream-2, #FAF3E0);
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 12px var(--shadow);
-    border: 1px solid var(--border);
+    box-shadow: 0 4px 12px var(--shadow, rgba(0, 0, 0, 0.1));
+    border: 1px solid var(--border, #F5E6D3);
   }
   
   .main-image {
@@ -81,12 +116,17 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
     transition: transform 0.3s ease;
   }
   
-  .main-image:not([src]),
-  .main-image[src=""] {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'%3E%3Crect width='600' height='400' fill='%23FAF3E0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia, serif' font-size='24' fill='%236B6B6B'%3EImagen no disponible%3C/text%3E%3C/svg%3E");
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
+  .placeholder-main-image {
+    width: 100%;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--cream-2, #FAF3E0), #F0E68C);
+    color: var(--brown-light, #6B4E3D);
+    font-family: 'Georgia', serif;
+    font-size: 1.25rem;
+    font-weight: 500;
   }
   
   .main-image:hover {
@@ -97,7 +137,7 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
     position: absolute;
     bottom: 12px;
     right: 12px;
-    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    background: linear-gradient(135deg, var(--gold, #B8860B), var(--gold-dark, #8B6914));
     color: white;
     padding: 6px 12px;
     border-radius: 20px;
@@ -105,7 +145,7 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s ease;
-    box-shadow: 0 2px 8px var(--shadow);
+    box-shadow: 0 2px 8px var(--shadow, rgba(0, 0, 0, 0.2));
   }
   
   .main-image-container:hover .zoom-hint {
@@ -119,11 +159,11 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
   }
   
   .thumbnail {
-    border: 2px solid var(--border);
+    border: 2px solid var(--border, #F5E6D3);
     border-radius: 8px;
     overflow: hidden;
     cursor: pointer;
-    background: var(--cream-2);
+    background: var(--cream-2, #FAF3E0);
     transition: all 0.3s ease;
     padding: 0;
     height: 80px;
@@ -135,21 +175,14 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
     object-fit: cover;
   }
   
-  .thumbnail-image:not([src]),
-  .thumbnail-image[src=""] {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23FAF3E0'/%3E%3C/svg%3E");
-    background-size: cover;
-    background-position: center;
-  }
-  
   .thumbnail:hover {
-    border-color: var(--gold);
+    border-color: var(--gold, #B8860B);
     transform: scale(1.05);
-    box-shadow: 0 2px 8px var(--shadow);
+    box-shadow: 0 2px 8px var(--shadow, rgba(0, 0, 0, 0.1));
   }
   
   .thumbnail.active {
-    border-color: var(--gold);
+    border-color: var(--gold, #B8860B);
     box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
   }
   
@@ -182,7 +215,7 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
     width: 80%;
     max-width: 700px;
     text-align: center;
-    color: var(--cream-2);
+    color: var(--cream-2, #FAF3E0);
     padding: 10px 0;
     font-family: 'Georgia', 'Times New Roman', serif;
   }
@@ -199,7 +232,7 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
   }
   
   .close:hover {
-    color: var(--gold);
+    color: var(--gold, #B8860B);
   }
   
   @keyframes fadeIn {
@@ -213,7 +246,8 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
   }
   
   @media (max-width: 768px) {
-    .main-image {
+    .main-image,
+    .placeholder-main-image {
       height: 300px;
     }
     
@@ -234,52 +268,79 @@ const baseUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/m
 </style>
 
 <script>
-  const thumbnails = document.querySelectorAll('.thumbnail');
-  const mainImage = document.getElementById('mainImage') as HTMLImageElement;
-  
-  thumbnails.forEach((thumb) => {
-    thumb.addEventListener('click', function(this: HTMLElement) {
-      const newSrc = this.getAttribute('data-image');
-      if (newSrc && mainImage) {
-        mainImage.src = newSrc;
-        thumbnails.forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-      }
-    });
-  });
-  
-  const modal = document.getElementById('imageModal');
-  const modalImg = document.getElementById('modalImage') as HTMLImageElement;
-  const caption = document.getElementById('caption');
-  const closeBtn = document.querySelector('.close');
-  
-  if (mainImage && modal && modalImg) {
-    mainImage.addEventListener('click', function(this: HTMLImageElement) {
-      modal.style.display = 'block';
-      modalImg.src = this.src;
-      if (caption) {
-        caption.textContent = this.alt;
-      }
-    });
+  // Interface para los datos de imagen en el cliente
+  interface ClientImageData {
+    src: string;
+    alt: string;
   }
   
-  if (closeBtn && modal) {
-    closeBtn.addEventListener('click', function() {
-      modal.style.display = 'none';
-    });
-  }
+  // Tipamos correctamente el array de datos de imagen
+  const imageData: ClientImageData[] = [];
   
-  if (modal) {
-    modal.addEventListener('click', function(e: MouseEvent) {
-      if (e.target === modal) {
+  document.addEventListener('DOMContentLoaded', function() {
+    const thumbnails = document.querySelectorAll<HTMLButtonElement>('.thumbnail');
+    const mainImageContainer = document.querySelector('.main-image-container');
+    const mainImage = mainImageContainer?.querySelector('img') as HTMLImageElement | null;
+    
+    // Recolectamos las URLs de las imágenes de los thumbnails
+    thumbnails.forEach((thumb, index) => {
+      const img = thumb.querySelector('img');
+      if (img && img.src) {
+        imageData.push({
+          src: img.src,
+          alt: img.alt || `Imagen ${index + 1}`
+        });
+      }
+    });
+    
+    // Configuramos los event listeners de thumbnails
+    thumbnails.forEach((thumb, index) => {
+      thumb.addEventListener('click', function(this: HTMLButtonElement) {
+        if (mainImage && imageData[index]) {
+          mainImage.src = imageData[index].src;
+          mainImage.alt = imageData[index].alt;
+          
+          // Actualizamos la clase active
+          thumbnails.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+        }
+      });
+    });
+    
+    // Configuramos el modal
+    const modal = document.getElementById('imageModal') as HTMLDivElement | null;
+    const modalImg = document.getElementById('modalImage') as HTMLImageElement | null;
+    const caption = document.getElementById('caption') as HTMLDivElement | null;
+    const closeBtn = document.querySelector('.close') as HTMLSpanElement | null;
+    
+    if (mainImage && modal && modalImg) {
+      mainImage.addEventListener('click', function() {
+        modal.style.display = 'block';
+        modalImg.src = this.src;
+        if (caption) {
+          caption.textContent = this.alt;
+        }
+      });
+    }
+    
+    if (closeBtn && modal) {
+      closeBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+      });
+    }
+    
+    if (modal) {
+      modal.addEventListener('click', function(e: MouseEvent) {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    }
+    
+    document.addEventListener('keydown', function(e: KeyboardEvent) {
+      if (e.key === 'Escape' && modal) {
         modal.style.display = 'none';
       }
     });
-  }
-  
-  document.addEventListener('keydown', function(e: KeyboardEvent) {
-    if (e.key === 'Escape' && modal) {
-      modal.style.display = 'none';
-    }
   });
 </script>

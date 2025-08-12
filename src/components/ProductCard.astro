@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 
 export interface Props {
   id: string;
@@ -27,13 +28,23 @@ const {
   precioUnidad
 } = Astro.props;
 
-const githubUser = "cesarcon3";
-const githubRepo = "catalogo-productos-crealolita";
-const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/main/src/content/productos/${id}/${imagen}`;
+// Función para importar dinámicamente la imagen
+let imageImport: ImageMetadata | null = null;
+try {
+  // Importamos la imagen desde la carpeta local del producto
+  const images = import.meta.glob('/src/content/productos/*/*.{png,jpg,jpeg,webp,avif}');
+  const imagePath = `/src/content/productos/${id}/${imagen}`;
+  
+  if (images[imagePath]) {
+    const importedImage = await images[imagePath]() as { default: ImageMetadata };
+    imageImport = importedImage.default;
+  }
+} catch (error) {
+  console.warn(`No se pudo cargar la imagen: /src/content/productos/${id}/${imagen}`);
+}
 
 const precioUnitarioCalculado = ventaPor === 'docena' ? (precio / 12).toFixed(2) : null;
 const precioMostrar = precioUnidad || precioUnitarioCalculado;
-
 
 ---
 
@@ -41,14 +52,22 @@ const precioMostrar = precioUnidad || precioUnitarioCalculado;
   {destacado && <span class="badge-destacado">⭐ Destacado</span>}
   
   <div class="image-container">
-    <Image 
-      src={imageUrl}
-      alt={nombre}
-      width={400}
-      height={300}
-      loading="lazy"
-      class="product-image"
-    />
+    {imageImport ? (
+      <Image 
+        src={imageImport}
+        alt={nombre}
+        width={400}
+        height={300}
+        loading="lazy"
+        class="product-image"
+        format="webp"
+        quality={85}
+      />
+    ) : (
+      <div class="placeholder-image">
+        <span>Imagen próximamente</span>
+      </div>
+    )}
     {ventaPor === 'docena' && (
       <div class="venta-docena-badge">
         <span>Por Docena</span>
@@ -148,10 +167,17 @@ const precioMostrar = precioUnidad || precioUnitarioCalculado;
     transition: transform 0.4s ease;
   }
   
-  .product-image:not([src]) {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23F5E6D3'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Open Sans' font-size='18' fill='%238B6914'%3EImagen próximamente%3C/text%3E%3C/svg%3E");
-    background-size: cover;
-    background-position: center;
+  .placeholder-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--beige, #F5E6D3), var(--cream, #FFF8F0));
+    color: var(--brown-light, #6B4E3D);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
   }
   
   .product-card:hover .product-image {
@@ -204,8 +230,8 @@ const precioMostrar = precioUnidad || precioUnitarioCalculado;
   
   .tag {
     font-size: 0.75rem;
-    color: #2D2416; /* Texto muy oscuro */
-    background: #F5F0E8; /* Fondo dorado muy claro */
+    color: #2D2416;
+    background: #F5F0E8;
     padding: 4px 10px;
     border-radius: 15px;
     font-weight: 500;
@@ -312,7 +338,7 @@ const precioMostrar = precioUnidad || precioUnitarioCalculado;
     box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
   }
   
-  /* Tablets en orientación vertical (768px) */
+  /* Responsive styles */
   @media (max-width: 768px) {
     .content {
       padding: 1.25rem;
@@ -334,7 +360,6 @@ const precioMostrar = precioUnidad || precioUnitarioCalculado;
     }
   }
   
-  /* Tablets pequeñas y móviles grandes (640px) */
   @media (max-width: 640px) {
     .content {
       padding: 1rem;
@@ -357,7 +382,6 @@ const precioMostrar = precioUnidad || precioUnitarioCalculado;
     }
   }
   
-  /* Móviles medianos (480px) */
   @media (max-width: 480px) {
     .content {
       padding: 0.875rem;
@@ -395,7 +419,6 @@ const precioMostrar = precioUnidad || precioUnitarioCalculado;
     }
   }
   
-  /* Móviles pequeños (360px) */
   @media (max-width: 360px) {
     .content {
       padding: 0.75rem;
