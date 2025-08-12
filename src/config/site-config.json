@@ -18,7 +18,8 @@
     "instagram": "https://www.instagram.com/crealolita/",
     "facebook": "https://www.facebook.com/people/Crealolita-Diseños-Personalizados-Regalos-Creativos/61578079074035/",
     "tiktok": "",
-    "youtube": ""
+    "youtube": "",
+    "twitter": "@crealolita"
   },
   
   "business": {
@@ -87,7 +88,7 @@
     "logoAlt": "Logo Creaciones Lolita - Corte y Grabado Láser",
     "ogImage": "/og-image.jpg",
     "ogImageAlt": "Creaciones Lolita - Productos Personalizados en MDF",
-    "favicon": "/favicon.ico",
+    "favicon": "/favicon.svg",
     "appleTouchIcon": "/apple-touch-icon.png",
     "maskIconColor": "#D4AF37"
   },
@@ -95,7 +96,8 @@
   "analytics": {
     "googleAnalytics": "",
     "googleTagManager": "",
-    "facebookPixel": ""
+    "facebookPixel": "",
+    "facebookAppId": ""
   },
   
   "features": {
