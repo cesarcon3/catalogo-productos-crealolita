@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+
 export interface Props {
   id: string;
   nombre: string;
@@ -25,25 +27,27 @@ const {
   precioUnidad
 } = Astro.props;
 
-
 const githubUser = "cesarcon3";
 const githubRepo = "catalogo-productos-crealolita";
 const imageUrl = `https://raw.githubusercontent.com/${githubUser}/${githubRepo}/main/src/content/productos/${id}/${imagen}`;
 
-
 const precioUnitarioCalculado = ventaPor === 'docena' ? (precio / 12).toFixed(2) : null;
 const precioMostrar = precioUnidad || precioUnitarioCalculado;
+
+
 ---
 
 <article class="product-card">
   {destacado && <span class="badge-destacado">⭐ Destacado</span>}
   
   <div class="image-container">
-    <img 
-      src={imageUrl} 
+    <Image 
+      src={imageUrl}
       alt={nombre}
+      width={400}
+      height={300}
       loading="lazy"
-      onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'300\' viewBox=\'0 0 400 300\'%3E%3Crect width=\'400\' height=\'300\' fill=\'%23F5E6D3\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'Open Sans\' font-size=\'18\' fill=\'%238B6914\'%3EImagen próximamente%3C/text%3E%3C/svg%3E'"
+      class="product-image"
     />
     {ventaPor === 'docena' && (
       <div class="venta-docena-badge">
@@ -137,14 +141,20 @@ const precioMostrar = precioUnidad || precioUnitarioCalculado;
     position: relative;
   }
   
-  .image-container img {
+  .product-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.4s ease;
   }
   
-  .product-card:hover .image-container img {
+  .product-image:not([src]) {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23F5E6D3'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Open Sans' font-size='18' fill='%238B6914'%3EImagen próximamente%3C/text%3E%3C/svg%3E");
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .product-card:hover .product-image {
     transform: scale(1.05);
   }
   
@@ -193,12 +203,12 @@ const precioMostrar = precioUnidad || precioUnitarioCalculado;
   }
   
   .tag {
-  font-size: 0.75rem;
-  color: #2D2416; /* Texto muy oscuro */
-  background: #F5F0E8; /* Fondo dorado muy claro */
-  padding: 4px 10px;
-  border-radius: 15px;
-  font-weight: 500;
+    font-size: 0.75rem;
+    color: #2D2416; /* Texto muy oscuro */
+    background: #F5F0E8; /* Fondo dorado muy claro */
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-weight: 500;
   }
   
   .price-section {
