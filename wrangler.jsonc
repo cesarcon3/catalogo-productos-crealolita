@@ -1,7 +1,0 @@
-{
-  "name": "catalogo-productos",
-  "compatibility_date": "2025-08-12",
-  "assets": {
-    "directory": "./dist"
-  }
-}
