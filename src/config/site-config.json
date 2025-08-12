@@ -94,8 +94,8 @@
   },
   
   "analytics": {
-    "googleAnalytics": "",
-    "googleTagManager": "",
+    "googleAnalytics": "G-BG38JKHZDP", 
+    "googleTagManager": "G-BG38JKHZDP",
     "facebookPixel": "",
     "facebookAppId": ""
   },
