@@ -1,0 +1,100 @@
+---
+// src/components/Header.astro
+---
+
+<header>
+  <div class="container">
+    <div class="header-content">
+      <a href="/">
+        <img src="/logo.webp" alt="Logo Creaciones Lolita - Corte y Grabado Láser" class="logo" />
+      </a>
+      <div class="brand-text">
+        <p class="header-subtitle">
+          Especialistas en productos personalizados en MDF con corte y grabado láser de alta precisión. 
+          Creamos piezas únicas y artesanales para decoración, regalos y proyectos especiales.
+        </p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  header {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    color: var(--text-on-gold);
+    padding: 1.5rem 0;
+    box-shadow: 0 2px 15px var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo {
+    height: 50px;
+    width: auto;
+    max-width: 410px;
+    object-fit: contain;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+  }
+
+  .brand-text {
+    text-align: right;
+    flex: 1;
+    margin-left: 2rem;
+  }
+  
+  .header-subtitle {
+    margin-top: 0.5rem;
+    opacity: 0.95;
+    font-size: 0.95rem;
+    font-style: italic;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .header-content {
+      flex-direction: column;
+      gap: 0.8rem;
+      text-align: center;
+    }
+
+    .logo {
+      height: 50px;
+      max-width: 300px;
+    }
+
+    .brand-text {
+      text-align: center;
+      margin-left: 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .logo {
+      height: 32px;
+      max-width: 220px;
+    }
+
+    .header-subtitle {
+      font-size: 0.85rem;
+    }
+  }
+</style>

@@ -1,0 +1,94 @@
+/* src/styles/global.css */
+
+:root {
+  /* Paleta de colores principal */
+  --cream-1: #F5F5DC;  /* Base */
+  --cream-2: #FFF8E1;  /* Cards */
+  --cream-3: #FAF3E0;  /* Backgrounds */
+  --gold: #D4AF37;     /* Accents */
+  --gold-dark: #B8941F; /* Gold hover */
+  --gold-light: #E5C547;     /* Hover effects suaves */
+  --gold-ultra-light: #F2E8B8;
+  
+  /* Colores de texto */
+  --text: #3D3D3D;
+  --text-light: #6B6B6B;
+  --text-on-gold: #FFFFFF;
+  
+  /* Otros */
+  --border: #E8D7C3;
+  --shadow: rgba(212, 175, 55, 0.15);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: var(--cream-1);
+  color: var(--text);
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+main {
+  flex: 1;
+  padding: 2rem 0;
+  background: var(--cream-1);
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--gold-dark);
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  line-height: 1.2;
+}
+
+/* Estilos globales para botones */
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s;
+  display: inline-block;
+  box-shadow: 0 4px 15px var(--shadow);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--shadow);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.7rem;
+    margin-bottom: 1rem;
+  }
+}

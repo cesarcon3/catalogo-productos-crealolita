@@ -1,0 +1,67 @@
+---
+// src/components/WhatsAppButton.astro
+import { getWhatsAppUrl } from '../config/site.ts';
+
+// WhatsApp URL
+const whatsappUrl = getWhatsAppUrl();
+---
+
+<a 
+  aria-label="Contactar por WhatsApp" 
+  href={whatsappUrl} 
+  class="whatsapp" 
+  target="_blank" 
+  rel="noopener noreferrer"
+>
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
+
+<style>
+  .whatsapp {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    animation: whatsapp-pulse 2s infinite;
+  }
+
+  .whatsapp:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(37, 211, 102, 0.6);
+    background: #128C7E;
+  }
+
+  .whatsapp i {
+    color: white;
+    font-size: 28px;
+  }
+
+  @keyframes whatsapp-pulse {
+    0% { box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4); }
+    50% { box-shadow: 0 4px 25px rgba(37, 211, 102, 0.7); }
+    100% { box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4); }
+  }
+
+  @media (max-width: 768px) {
+    .whatsapp {
+      bottom: 15px;
+      right: 15px;
+      width: 55px;
+      height: 55px;
+    }
+
+    .whatsapp i {
+      font-size: 24px;
+    }
+  }
+</style>

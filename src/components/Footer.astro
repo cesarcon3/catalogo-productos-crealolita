@@ -1,0 +1,61 @@
+---
+// src/components/Footer.astro
+import { SITE_CONFIG, getWhatsAppUrl } from '../config/site.ts';
+
+// WhatsApp URL
+const whatsappUrl = getWhatsAppUrl();
+---
+
+<footer>
+  <div class="container">
+    <p>© 2025 {SITE_CONFIG.name}. Todos los derechos reservados.</p>
+    <p>Productos artesanales con amor 💛</p>
+    <div class="social-links">
+      <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      <a href={SITE_CONFIG.social.instagram} target="_blank" rel="noopener noreferrer">Instagram</a>
+      <a href={SITE_CONFIG.social.facebook} target="_blank" rel="noopener noreferrer">Facebook</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    background: var(--cream-3);
+    border-top: 2px solid var(--gold);
+    padding: 2rem 0;
+    margin-top: 4rem;
+  }
+  
+  footer .container {
+    text-align: center;
+    color: var(--text-light);
+  }
+  
+  footer p {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .social-links {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .social-links a {
+    color: var(--text-light);
+    text-decoration: none;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    background: var(--cream-2);
+  }
+  
+  .social-links a:hover {
+    color: var(--gold-dark);
+    background: var(--gold-ultra-light);
+    transform: translateY(-2px);
+  }
+</style>
