@@ -30,10 +30,6 @@ export const SITE_CONFIG = {
     'productos únicos Venezuela'
   ],
   
-  // Analytics
-  googleAnalyticsId: 'G-BG38JKHZDP',
-  googleSiteVerification: 'A69SpffKp0bhRHGHu98sZ62XTS5_YlCwRA6myaHar2w',
-  
   // Imágenes por defecto
   defaultImage: '/og-image.jpg',
   logo: '/logo.webp',

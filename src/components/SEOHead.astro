@@ -70,6 +70,30 @@ const organizationSchema = {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
+<!-- Google Tag Manager -->
+<script is:inline>
+(function(w, d, s, l, i) {
+  (w[l] = w[l] || []).push({
+    'gtm.start': new Date().getTime(),
+    event: 'gtm.js'
+  });
+
+  var f = d.getElementsByTagName(s)[0];
+  var j = d.createElement(s);
+  var dl = l !== 'dataLayer' ? '&l=' + l : '';
+
+  j.async = true;
+  j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+
+  if (f && f.parentNode) {
+    f.parentNode.insertBefore(j, f);
+  }
+})(window, document, 'script', 'dataLayer', 'GTM-5XL3FW9P');
+</script>
+<!-- End Google Tag Manager -->
+
+
+
   <!-- SEO Básico -->
   <title>{fullTitle}</title>
   <meta name="description" content={improvedDescription} />
@@ -109,7 +133,7 @@ const organizationSchema = {
   <link rel="mask-icon" href="/favicon.ico" color="#D4AF37" />
   
   <!-- Verificaciones de motores de búsqueda -->
-  <meta name="google-site-verification" content={SITE_CONFIG.googleSiteVerification} />
+  <meta name="google-site-verification" content="A69SpffKp0bhRHGHu98sZ62XTS5_YlCwRA6myaHar2w" />
   
   <!-- FontAwesome para el botón de WhatsApp -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -121,20 +145,12 @@ const organizationSchema = {
   <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
   
   <!-- Google Analytics -->
-  <script async src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.googleAnalyticsId}`}></script>
+  <script async src=https://www.googletagmanager.com/gtag/js?id=G-BG38JKHZDP></script>
   <script is:inline>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-BG38JKHZDP');
   </script>
-  
-  <!-- Google Tag Manager -->
-  <script is:inline>
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','G-BG38JKHZDP');
   </script>
 </head>
