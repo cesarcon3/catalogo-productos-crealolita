@@ -87,20 +87,25 @@ if (imageImports.length === 0) {
   console.warn(`No se pudieron cargar imágenes para el producto: ${productId}`);
   console.warn(`Imágenes solicitadas:`, images);
 }
+
+// Generar un ID único para esta galería
+const galleryId = `gallery-${productId}-${Math.random().toString(36).substr(2, 9)}`;
 ---
 
-<div class="gallery-container" data-product-gallery>
+<div class="gallery-container" data-product-gallery data-gallery-id={galleryId}>
   <MainImage 
     images={imageImports}
     productName={productName}
+    galleryId={galleryId}
   />
   
   <ThumbnailGrid 
     images={imageImports}
     productName={productName}
+    galleryId={galleryId}
   />
   
-  <ImageModal />
+  <ImageModal galleryId={galleryId} />
 </div>
 
 <style>
@@ -117,6 +122,241 @@ if (imageImports.length === 0) {
   }
 </style>
 
-<script>
-  import('./gallery-controller.ts');
+<script define:vars={{ imageImports, galleryId }}>
+  // Store global para manejar el estado de la galería
+  if (!window.galleryStores) {
+    window.galleryStores = new Map();
+  }
+
+  // Crear store para esta galería específica
+  const galleryStore = {
+    currentIndex: 0,
+    images: imageImports,
+    isModalOpen: false,
+    
+    // Cambiar imagen actual
+    setCurrentIndex(index) {
+      if (index >= 0 && index < this.images.length) {
+        this.currentIndex = index;
+        this.updateMainImage();
+        this.updateThumbnails();
+      }
+    },
+    
+    // Actualizar imagen principal usando el método simple
+    updateMainImage() {
+      const dynamicImg = document.querySelector(`[data-gallery-id="${galleryId}"] [data-main-image-dynamic]`);
+      const staticImg = document.querySelector(`[data-gallery-id="${galleryId}"] .static-image`);
+      
+      if (!dynamicImg || !this.images[this.currentIndex]) return;
+      
+      const currentImage = this.images[this.currentIndex];
+      
+      // Si es la primera imagen, usar la estática
+      if (this.currentIndex === 0) {
+        dynamicImg.classList.add('hidden');
+        if (staticImg) {
+          staticImg.style.opacity = '1';
+        }
+      } else {
+        // Para otras imágenes, usar la dinámica
+        if (staticImg) {
+          staticImg.style.opacity = '0';
+        }
+        
+        // Precargar la imagen antes de mostrarla
+        const newImg = new Image();
+        newImg.onload = () => {
+          dynamicImg.src = newImg.src;
+          dynamicImg.alt = currentImage.alt;
+          dynamicImg.setAttribute('aria-label', `Ampliar imagen: ${currentImage.alt}`);
+          dynamicImg.classList.remove('hidden');
+        };
+        newImg.src = currentImage.src.src;
+      }
+    },
+    
+    // Actualizar thumbnails activos
+    updateThumbnails() {
+      const thumbnails = document.querySelectorAll(`[data-gallery-id="${galleryId}"] [data-thumbnail]`);
+      thumbnails.forEach((thumb, index) => {
+        if (index === this.currentIndex) {
+          thumb.classList.add('active');
+          thumb.setAttribute('aria-current', 'true');
+        } else {
+          thumb.classList.remove('active');
+          thumb.removeAttribute('aria-current');
+        }
+      });
+    },
+    
+    // Abrir modal
+    openModal() {
+      this.isModalOpen = true;
+      const modal = document.querySelector(`[data-gallery-id="${galleryId}"] [data-modal]`);
+      const modalImg = document.querySelector(`[data-gallery-id="${galleryId}"] [data-modal-image]`);
+      const modalCaption = document.querySelector(`[data-gallery-id="${galleryId}"] [data-modal-caption]`);
+      
+      if (modal && modalImg && this.images[this.currentIndex]) {
+        const currentImage = this.images[this.currentIndex];
+        
+        // Precargar imagen de alta resolución
+        const newImg = new Image();
+        newImg.onload = () => {
+          modalImg.src = newImg.src;
+          modalImg.alt = currentImage.alt;
+          
+          modal.style.display = 'flex';
+          modal.setAttribute('aria-hidden', 'false');
+          
+          requestAnimationFrame(() => {
+            modal.classList.add('show');
+          });
+          
+          document.body.style.overflow = 'hidden';
+          
+          // Focus en el botón de cerrar
+          const closeButton = modal.querySelector('[data-modal-close]');
+          if (closeButton) closeButton.focus();
+        };
+        
+        newImg.src = currentImage.src.src;
+        
+        if (modalCaption) {
+          modalCaption.textContent = currentImage.alt;
+        }
+      }
+    },
+    
+    // Cerrar modal
+    closeModal() {
+      this.isModalOpen = false;
+      const modal = document.querySelector(`[data-gallery-id="${galleryId}"] [data-modal]`);
+      
+      if (modal) {
+        modal.classList.remove('show');
+        modal.setAttribute('aria-hidden', 'true');
+        
+        setTimeout(() => {
+          modal.style.display = 'none';
+          document.body.style.overflow = '';
+        }, 300);
+        
+        // Devolver focus a la imagen visible actual
+        const dynamicImg = document.querySelector(`[data-gallery-id="${galleryId}"] [data-main-image-dynamic]`);
+        const staticImg = document.querySelector(`[data-gallery-id="${galleryId}"] .static-image`);
+        
+        if (this.currentIndex === 0 && staticImg) {
+          staticImg.focus();
+        } else if (dynamicImg) {
+          dynamicImg.focus();
+        }
+      }
+    },
+    
+    // Navegar con teclado
+    navigate(direction) {
+      const newIndex = (this.currentIndex + direction + this.images.length) % this.images.length;
+      this.setCurrentIndex(newIndex);
+      
+      if (this.isModalOpen) {
+        this.openModal();
+      }
+    }
+  };
+
+  // Guardar store en el mapa global
+  window.galleryStores.set(galleryId, galleryStore);
+
+  // Configurar event listeners cuando el DOM esté listo
+  function setupGallery() {
+    // Event listeners para thumbnails
+    const thumbnails = document.querySelectorAll(`[data-gallery-id="${galleryId}"] [data-thumbnail]`);
+    thumbnails.forEach((thumb, index) => {
+      thumb.addEventListener('click', (e) => {
+        e.preventDefault();
+        galleryStore.setCurrentIndex(index);
+      });
+
+      thumb.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          galleryStore.setCurrentIndex(index);
+        }
+      });
+    });
+
+    // Event listeners para abrir modal
+    const dynamicImg = document.querySelector(`[data-gallery-id="${galleryId}"] [data-main-image-dynamic]`);
+    const staticImg = document.querySelector(`[data-gallery-id="${galleryId}"] .static-image`);
+    
+    if (dynamicImg) {
+      dynamicImg.addEventListener('click', () => galleryStore.openModal());
+      dynamicImg.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          galleryStore.openModal();
+        }
+      });
+    }
+    
+    if (staticImg) {
+      staticImg.addEventListener('click', () => galleryStore.openModal());
+      staticImg.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          galleryStore.openModal();
+        }
+      });
+    }
+
+    // Event listeners del modal
+    const closeButton = document.querySelector(`[data-gallery-id="${galleryId}"] [data-modal-close]`);
+    const modalBackdrop = document.querySelector(`[data-gallery-id="${galleryId}"] [data-modal-backdrop]`);
+    
+    if (closeButton) {
+      closeButton.addEventListener('click', () => galleryStore.closeModal());
+    }
+    
+    if (modalBackdrop) {
+      modalBackdrop.addEventListener('click', () => galleryStore.closeModal());
+    }
+
+    // Prevenir cierre del modal al hacer click en la imagen
+    const modalImg = document.querySelector(`[data-gallery-id="${galleryId}"] [data-modal-image]`);
+    if (modalImg) {
+      modalImg.addEventListener('click', (e) => e.stopPropagation());
+    }
+
+    // Navegación con teclado
+    document.addEventListener('keydown', (e) => {
+      if (galleryStore.isModalOpen) {
+        switch (e.key) {
+          case 'Escape':
+            e.preventDefault();
+            galleryStore.closeModal();
+            break;
+          case 'ArrowLeft':
+            e.preventDefault();
+            galleryStore.navigate(-1);
+            break;
+          case 'ArrowRight':
+            e.preventDefault();
+            galleryStore.navigate(1);
+            break;
+        }
+      }
+    });
+
+    // Inicializar el estado inicial
+    galleryStore.updateMainImage();
+    galleryStore.updateThumbnails();
+  }
+
+  // Inicializar cuando el DOM esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupGallery);
+  } else {
+    setupGallery();
+  }
 </script>

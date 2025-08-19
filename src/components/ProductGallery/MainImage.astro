@@ -2,30 +2,48 @@
 import { Image } from 'astro:assets';
 import type { MainImageProps } from '../../types/types';
 
-const { images, productName } = Astro.props as MainImageProps;
+interface Props extends MainImageProps {
+  galleryId: string;
+}
+
+const { images, productName, galleryId } = Astro.props as Props;
 
 // Validación adicional para asegurar que tenemos imágenes válidas
 const validImages = images?.filter(img => img?.src && typeof img.src === 'object') || [];
 const hasValidImage = validImages.length > 0;
 ---
 
-<div class="main-image-container">
+<div class="main-image-container" data-gallery-id={galleryId}>
   {hasValidImage ? (
-    <Image 
-      id="mainImage"
-      src={validImages[0].src}
-      alt={`${productName} - Vista principal`}
-      width={800}
-      height={600}
-      class="main-image"
-      format="webp"
-      quality={90}
-      widths={[400, 600, 800, 1200]}
-      sizes="(max-width: 768px) 400px, (max-width: 1200px) 600px, 800px"
-      data-main-image
-      loading="eager"
-      decoding="async"
-    />
+    <div class="image-wrapper">
+      <!-- Imagen estática de Astro para la primera imagen (SEO y performance) -->
+      <Image 
+        id={`mainImageStatic-${galleryId}`}
+        src={validImages[0].src}
+        alt={`${productName} - Vista principal`}
+        width={800}
+        height={600}
+        class="main-image static-image"
+        format="webp"
+        quality={90}
+        widths={[400, 600, 800, 1200]}
+        sizes="(max-width: 768px) 400px, (max-width: 1200px) 600px, 800px"
+        loading="eager"
+        decoding="async"
+      />
+      
+      <!-- Imagen dinámica para cambios de galería -->
+      <img 
+        id={`mainImageDynamic-${galleryId}`}
+        src={validImages[0].src.src}
+        alt={`${productName} - Vista principal`}
+        class="main-image dynamic-image hidden"
+        data-main-image-dynamic
+        tabindex="0"
+        role="button"
+        aria-label={`Ampliar imagen: ${productName}`}
+      />
+    </div>
   ) : (
     <div class="placeholder-main-image">
       <div class="placeholder-content">
@@ -51,13 +69,45 @@ const hasValidImage = validImages.length > 0;
     aspect-ratio: 4/3;
   }
   
+  .image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
   .main-image {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: contain;
     cursor: zoom-in;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
     background: var(--cream-2, #FAF3E0);
+  }
+  
+  .static-image {
+    z-index: 1;
+    opacity: 1;
+  }
+  
+  .dynamic-image {
+    z-index: 2;
+    opacity: 0;
+  }
+  
+  .dynamic-image:not(.hidden) {
+    opacity: 1;
+  }
+  
+  .hidden {
+    opacity: 0;
+  }
+  
+  .main-image:focus {
+    outline: 2px solid var(--gold, #B8860B);
+    outline-offset: 2px;
   }
   
   .placeholder-main-image {
@@ -113,6 +163,7 @@ const hasValidImage = validImages.length > 0;
     transition: opacity 0.3s ease;
     box-shadow: 0 2px 8px var(--shadow, rgba(0, 0, 0, 0.2));
     font-weight: 500;
+    z-index: 3;
   }
   
   .main-image-container:hover .zoom-hint {
@@ -133,6 +184,17 @@ const hasValidImage = validImages.length > 0;
       right: 8px;
       font-size: 0.75rem;
       padding: 4px 8px;
+    }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .main-image,
+    .zoom-hint {
+      transition: none;
+    }
+    
+    .main-image:hover {
+      transform: none;
     }
   }
 </style>

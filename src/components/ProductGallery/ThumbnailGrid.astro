@@ -2,7 +2,11 @@
 import { Image } from 'astro:assets';
 import type { ThumbnailGridProps } from '../../types/types';
 
-const { images, productName } = Astro.props as ThumbnailGridProps;
+interface Props extends ThumbnailGridProps {
+  galleryId: string;
+}
+
+const { images, productName, galleryId } = Astro.props as Props;
 
 // Filtrar imágenes válidas
 const validImages = images?.filter(img => img?.src && typeof img.src === 'object') || [];
@@ -10,7 +14,7 @@ const hasMultipleImages = validImages.length > 1;
 ---
 
 {hasMultipleImages && (
-  <div class="thumbnails" data-thumbnails>
+  <div class="thumbnails" data-thumbnails data-gallery-id={galleryId}>
     {validImages.map((imageData, index) => (
       <button
         class={`thumbnail ${index === 0 ? 'active' : ''}`}
@@ -124,6 +128,21 @@ const hasMultipleImages = validImages.length > 1;
     
     .thumbnail {
       min-width: 50px;
+    }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .thumbnail,
+    .thumbnail-image {
+      transition: none;
+    }
+    
+    .thumbnail:hover {
+      transform: none;
+    }
+    
+    .thumbnail:hover .thumbnail-image {
+      transform: none;
     }
   }
 </style>

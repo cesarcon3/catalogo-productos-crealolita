@@ -1,8 +1,13 @@
 ---
 // Componente modal para mostrar imágenes en zoom
+interface Props {
+  galleryId: string;
+}
+
+const { galleryId } = Astro.props as Props;
 ---
 
-<div id="imageModal" class="modal" data-modal aria-hidden="true">
+<div id={`imageModal-${galleryId}`} class="modal" data-modal aria-hidden="true" data-gallery-id={galleryId}>
   <div class="modal-backdrop" data-modal-backdrop></div>
   <div class="modal-container">
     <button class="close-button" data-modal-close aria-label="Cerrar imagen ampliada">
@@ -11,11 +16,11 @@
     <div class="modal-content-wrapper">
       <img 
         class="modal-image" 
-        id="modalImage" 
+        id={`modalImage-${galleryId}`}
         alt="Imagen ampliada"
         data-modal-image
       >
-      <div class="modal-caption" id="modalCaption" data-modal-caption></div>
+      <div class="modal-caption" id={`modalCaption-${galleryId}`} data-modal-caption></div>
     </div>
   </div>
 </div>
