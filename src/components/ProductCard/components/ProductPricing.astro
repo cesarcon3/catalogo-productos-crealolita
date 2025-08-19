@@ -1,0 +1,81 @@
+---
+export interface Props {
+  precio: number;
+  moneda: string;
+  ventaPor: 'unidad' | 'docena';
+  precioMostrar: string | null;
+}
+
+const { precio, moneda, ventaPor, precioMostrar } = Astro.props;
+
+const currencySymbol = moneda === "USD" ? "$" : moneda;
+---
+
+<div class="price-section">
+  <div class="price-main">
+    <span class="currency">{currencySymbol}</span>
+    <span class="price">{precio.toFixed(2)}</span>
+    <span class="price-type">/{ventaPor}</span>
+  </div>
+  {ventaPor === 'docena' && precioMostrar && (
+    <div class="price-unit">
+      <span class="unit-label">Precio unitario:</span>
+      <span class="unit-price">{currencySymbol}{precioMostrar}</span>
+    </div>
+  )}
+</div>
+
+<style>
+  .price-section {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: var(--cream-light, #FFFBF7);
+    border-radius: var(--radius, 12px);
+    border: 1px solid var(--beige, #F5E6D3);
+  }
+  
+  .price-main {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .currency {
+    font-size: 1rem;
+    color: var(--gold-dark, #8B6914);
+    font-weight: 600;
+  }
+  
+  .price {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--brown-dark, #2B1911);
+    font-family: 'Playfair Display', serif;
+  }
+  
+  .price-type {
+    font-size: 0.9rem;
+    color: var(--brown-light, #6B4E3D);
+    font-style: italic;
+  }
+  
+  .price-unit {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--beige, #F5E6D3);
+  }
+  
+  .unit-label {
+    font-size: 0.85rem;
+    color: var(--brown-light, #6B4E3D);
+  }
+  
+  .unit-price {
+    font-size: 1rem;
+    color: var(--gold-dark, #8B6914);
+    font-weight: 600;
+  }
+</style>

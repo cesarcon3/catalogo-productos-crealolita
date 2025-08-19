@@ -1,0 +1,204 @@
+---
+// Componente modal para mostrar imágenes en zoom
+---
+
+<div id="imageModal" class="modal" data-modal aria-hidden="true">
+  <div class="modal-backdrop" data-modal-backdrop></div>
+  <div class="modal-container">
+    <button class="close-button" data-modal-close aria-label="Cerrar imagen ampliada">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="modal-content-wrapper">
+      <img 
+        class="modal-image" 
+        id="modalImage" 
+        alt="Imagen ampliada"
+        data-modal-image
+      >
+      <div class="modal-caption" id="modalCaption" data-modal-caption></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .modal.show {
+    display: flex;
+    opacity: 1;
+  }
+  
+  .modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+  
+  .modal-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  
+  .modal-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 95%;
+    max-height: 95%;
+  }
+  
+  .modal-image {
+    max-width: 100%;
+    max-height: 85vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+  }
+  
+  .modal.show .modal-image {
+    transform: scale(1);
+  }
+  
+  .modal-caption {
+    margin-top: 1rem;
+    text-align: center;
+    color: var(--cream-2, #FAF3E0);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 1rem;
+    max-width: 600px;
+    line-height: 1.4;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1001;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .close-button:hover {
+    color: var(--gold, #B8860B);
+    background: rgba(0, 0, 0, 0.7);
+    transform: scale(1.1);
+  }
+  
+  .close-button:focus {
+    outline: 2px solid var(--gold, #B8860B);
+    outline-offset: 2px;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    from { 
+      transform: translateY(20px) scale(0.95); 
+      opacity: 0;
+    }
+    to { 
+      transform: translateY(0) scale(1); 
+      opacity: 1;
+    }
+  }
+  
+  .modal.show {
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .modal.show .modal-content-wrapper {
+    animation: slideUp 0.3s ease;
+  }
+  
+  @media (max-width: 768px) {
+    .modal-container {
+      padding: 1rem;
+    }
+    
+    .close-button {
+      top: 15px;
+      right: 20px;
+      font-size: 30px;
+      width: 40px;
+      height: 40px;
+    }
+    
+    .modal-image {
+      max-height: 80vh;
+    }
+    
+    .modal-caption {
+      font-size: 0.9rem;
+      margin-top: 0.75rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .modal-container {
+      padding: 0.5rem;
+    }
+    
+    .close-button {
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      width: 35px;
+      height: 35px;
+    }
+    
+    .modal-image {
+      max-height: 75vh;
+    }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .modal,
+    .modal-image,
+    .close-button {
+      transition: none;
+    }
+    
+    .modal.show,
+    .modal.show .modal-content-wrapper {
+      animation: none;
+    }
+  }
+</style>

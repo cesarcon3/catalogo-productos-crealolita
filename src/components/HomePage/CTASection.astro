@@ -1,0 +1,103 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+  buttonText?: string;
+  whatsappNumber?: string;
+  whatsappMessage?: string;
+}
+
+const { 
+  title = "¿Tienes una idea especial?",
+  description = "Podemos crear diseños personalizados según tus necesidades",
+  buttonText = "💬 Contáctanos por WhatsApp",
+  whatsappNumber = "584161452966",
+  whatsappMessage = "Hola, me gustaría obtener información acerca de"
+} = Astro.props;
+
+const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(whatsappMessage)}`;
+---
+
+<section class="cta-section">
+  <div class="cta-content">
+    <h2>{title}</h2>
+    <p>{description}</p>
+    <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" class="cta-button">
+      {buttonText}
+    </a>
+  </div>
+</section>
+
+<style>
+  .cta-section {
+    background: linear-gradient(135deg, var(--gold, #D4AF37), var(--gold-dark, #B8941F));
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-top: 4rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .cta-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-content h2 {
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    font-family: 'Georgia', serif;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .cta-content p {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    font-family: 'Georgia', serif;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: white;
+    color: var(--gold, #D4AF37);
+    padding: 14px 36px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+    font-family: 'Georgia', serif;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: var(--cream-2, #FFF8E1);
+  }
+
+  @media (max-width: 768px) {
+    .cta-section {
+      padding: 2rem 1rem;
+    }
+
+    .cta-content h2 {
+      font-size: 1.5rem;
+    }
+  }
+</style>

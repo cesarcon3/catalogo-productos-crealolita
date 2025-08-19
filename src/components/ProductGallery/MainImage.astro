@@ -1,0 +1,138 @@
+---
+import { Image } from 'astro:assets';
+import type { MainImageProps } from '../../types/types';
+
+const { images, productName } = Astro.props as MainImageProps;
+
+// Validación adicional para asegurar que tenemos imágenes válidas
+const validImages = images?.filter(img => img?.src && typeof img.src === 'object') || [];
+const hasValidImage = validImages.length > 0;
+---
+
+<div class="main-image-container">
+  {hasValidImage ? (
+    <Image 
+      id="mainImage"
+      src={validImages[0].src}
+      alt={`${productName} - Vista principal`}
+      width={800}
+      height={600}
+      class="main-image"
+      format="webp"
+      quality={90}
+      widths={[400, 600, 800, 1200]}
+      sizes="(max-width: 768px) 400px, (max-width: 1200px) 600px, 800px"
+      data-main-image
+      loading="eager"
+      decoding="async"
+    />
+  ) : (
+    <div class="placeholder-main-image">
+      <div class="placeholder-content">
+        <span class="placeholder-icon">🖼️</span>
+        <span class="placeholder-text">Imagen no disponible</span>
+        <span class="placeholder-subtext">{productName}</span>
+      </div>
+    </div>
+  )}
+  {hasValidImage && (
+    <div class="zoom-hint">🔍 Click para ampliar</div>
+  )}
+</div>
+
+<style>
+  .main-image-container {
+    position: relative;
+    background: var(--cream-2, #FAF3E0);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px var(--shadow, rgba(0, 0, 0, 0.1));
+    border: 1px solid var(--border, #F5E6D3);
+    aspect-ratio: 4/3;
+  }
+  
+  .main-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+    background: var(--cream-2, #FAF3E0);
+  }
+  
+  .placeholder-main-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--cream-2, #FAF3E0), #F0E68C);
+    color: var(--brown-light, #6B4E3D);
+    font-family: 'Georgia', serif;
+  }
+  
+  .placeholder-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .placeholder-icon {
+    font-size: 3rem;
+    opacity: 0.6;
+  }
+  
+  .placeholder-text {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  
+  .placeholder-subtext {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    font-style: italic;
+  }
+  
+  .main-image:hover {
+    transform: scale(1.02);
+  }
+  
+  .zoom-hint {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: linear-gradient(135deg, var(--gold, #B8860B), var(--gold-dark, #8B6914));
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 2px 8px var(--shadow, rgba(0, 0, 0, 0.2));
+    font-weight: 500;
+  }
+  
+  .main-image-container:hover .zoom-hint {
+    opacity: 1;
+  }
+  
+  @media (max-width: 768px) {
+    .main-image-container {
+      aspect-ratio: 3/2;
+    }
+    
+    .placeholder-main-image {
+      font-size: 1rem;
+    }
+    
+    .zoom-hint {
+      bottom: 8px;
+      right: 8px;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+    }
+  }
+</style>

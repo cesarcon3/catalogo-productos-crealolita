@@ -1,0 +1,44 @@
+---
+import HeroSection from './HeroSection.astro';
+import ProductSection from './ProductSection.astro';
+import CTASection from './CTASection.astro';
+import type { Producto } from '../../types/types';
+
+export interface Props {
+  destacados: Producto[];
+  noDestacados: Producto[];
+}
+
+const { destacados, noDestacados } = Astro.props;
+---
+
+<div class="home-page">
+  <!-- Hero Section -->
+  <HeroSection />
+
+  <!-- Productos Destacados - Solo se muestra si hay productos destacados -->
+  {destacados.length > 0 && (
+    <ProductSection
+      title="⭐ Productos Destacados"
+      productos={destacados}
+    />
+  )}
+
+  <!-- Todos los Productos NO Destacados -->
+  {noDestacados.length > 0 && (
+    <ProductSection
+      title="🏷️ Nuestros productos"
+      description="Recuerdos perfectos para ese día tan especial. Personalizamos cada detalle con el nombre y fecha de tu evento."
+      productos={noDestacados}
+    />
+  )}
+
+  <!-- CTA Section -->
+  <CTASection />
+</div>
+
+<style>
+  .home-page {
+    width: 100%;
+  }
+</style>

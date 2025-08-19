@@ -1,0 +1,86 @@
+---
+import ProductGrid from './ProductGrid.astro';
+import type { Producto } from '../../types/types';
+
+export interface Props {
+  title: string;
+  description?: string;
+  productos: Producto[];
+  showIfEmpty?: boolean;
+}
+
+const { title, description, productos, showIfEmpty = false } = Astro.props;
+
+// No renderizar la sección si no hay productos y showIfEmpty es false
+if (!showIfEmpty && productos.length === 0) {
+  return null;
+}
+---
+
+<section class="productos-section">
+  <h2 class="section-title">{title}</h2>
+  {description && (
+    <p class="section-description">{description}</p>
+  )}
+  
+  {productos.length > 0 ? (
+    <ProductGrid productos={productos} />
+  ) : (
+    <div class="empty-state">
+      <p>No hay productos disponibles en esta categoría.</p>
+    </div>
+  )}
+</section>
+
+<style>
+  .productos-section {
+    margin-bottom: 4rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    color: var(--text, #3D3D3D);
+    margin-bottom: 0.5rem;
+    text-align: center;
+    font-family: 'Georgia', serif;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold, #D4AF37), transparent);
+  }
+
+  .section-description {
+    text-align: center;
+    color: var(--text-light, #6B6B6B);
+    margin-bottom: 2rem;
+    margin-top: 1.5rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Georgia', serif;
+    font-style: italic;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-light, #6B6B6B);
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    .section-title {
+      font-size: 1.5rem;
+    }
+  }
+</style>

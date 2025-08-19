@@ -1,19 +1,14 @@
 ---
-import { Image } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
+import type { ProductProps } from './types';
+import { loadProductImage } from './utils/imageLoader';
+import { calculateUnitPrice } from './utils/priceCalculator';
+import ProductBadges from './components/ProductBadges.astro';
+import ProductImage from './components/ProductImage.astro';
+import ProductTags from './components/ProductTags.astro';
+import ProductPricing from './components/ProductPricing.astro';
+import ProductActions from './components/ProductActions.astro';
 
-export interface Props {
-  id: string;
-  nombre: string;
-  precio: number;
-  moneda: string;
-  descripcion: string;
-  imagen: string;
-  destacado?: boolean;
-  tags?: string[];
-  ventaPor?: 'unidad' | 'docena';
-  precioUnidad?: number;
-}
+export interface Props extends ProductProps {}
 
 const { 
   id, 
@@ -28,92 +23,34 @@ const {
   precioUnidad
 } = Astro.props;
 
-// Función para importar dinámicamente la imagen
-let imageImport: ImageMetadata | null = null;
-try {
-  // Importamos la imagen desde la carpeta local del producto
-  const images = import.meta.glob('/src/content/productos/*/*.{png,jpg,jpeg,webp,avif}');
-  const imagePath = `/src/content/productos/${id}/${imagen}`;
-  
-  if (images[imagePath]) {
-    const importedImage = await images[imagePath]() as { default: ImageMetadata };
-    imageImport = importedImage.default;
-  }
-} catch (error) {
-  console.warn(`No se pudo cargar la imagen: /src/content/productos/${id}/${imagen}`);
-}
+// Cargar imagen del producto
+const imageImport = await loadProductImage(id, imagen);
 
-const precioUnitarioCalculado = ventaPor === 'docena' ? (precio / 12).toFixed(2) : null;
-const precioMostrar = precioUnidad || precioUnitarioCalculado;
-
+// Calcular precio unitario
+const precioMostrar = calculateUnitPrice(precio, ventaPor, precioUnidad);
 ---
 
 <article class="product-card">
-  {destacado && <span class="badge-destacado">⭐ Destacado</span>}
+  <ProductBadges destacado={destacado} ventaPor={ventaPor} />
   
-  <div class="image-container">
-    {imageImport ? (
-      <Image 
-        src={imageImport}
-        alt={nombre}
-        width={400}
-        height={300}
-        loading="lazy"
-        class="product-image"
-        format="webp"
-        quality={85}
-      />
-    ) : (
-      <div class="placeholder-image">
-        <span>Imagen próximamente</span>
-      </div>
-    )}
-    {ventaPor === 'docena' && (
-      <div class="venta-docena-badge">
-        <span>Por Docena</span>
-      </div>
-    )}
+  <div class="image-wrapper">
+    <ProductImage imageImport={imageImport} nombre={nombre} />
   </div>
   
   <div class="content">
     <h3>{nombre}</h3>
     <p class="description">{descripcion.substring(0, 100)}...</p>
     
-    {tags.length > 0 && (
-      <div class="tags">
-        {tags.slice(0, 3).map(tag => (
-          <span class="tag">#{tag}</span>
-        ))}
-      </div>
-    )}
+    <ProductTags tags={tags} />
     
-    <div class="price-section">
-      <div class="price-main">
-        <span class="currency">{moneda === "USD" ? "$" : moneda}</span>
-        <span class="price">{precio.toFixed(2)}</span>
-        <span class="price-type">/{ventaPor}</span>
-      </div>
-      {ventaPor === 'docena' && precioMostrar && (
-        <div class="price-unit">
-          <span class="unit-label">Precio unitario:</span>
-          <span class="unit-price">{moneda === "USD" ? "$" : moneda}{precioMostrar}</span>
-        </div>
-      )}
-    </div>
+    <ProductPricing 
+      precio={precio} 
+      moneda={moneda} 
+      ventaPor={ventaPor} 
+      precioMostrar={precioMostrar}
+    />
     
-    <div class="footer">
-      <a href={`/producto/${id}`} class="btn-ver">
-        Ver detalles →
-      </a>
-      <a href={`https://wa.me/584161452966?text=Hola! Me interesa el producto: ${nombre}`} 
-         target="_blank" 
-         class="btn-whatsapp">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.149-.67.149-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-        </svg>
-        Consultar
-      </a>
-    </div>
+    <ProductActions id={id} nombre={nombre} />
   </div>
 </article>
 
@@ -137,64 +74,12 @@ const precioMostrar = precioUnidad || precioUnitarioCalculado;
     border-color: var(--gold-light, #DAA520);
   }
   
-  .badge-destacado {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: var(--pink, #E91E63);
-    color: white;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3);
-    font-family: 'Open Sans', sans-serif;
-  }
-  
-  .image-container {
-    width: 100%;
-    height: 250px;
-    overflow: hidden;
-    background: var(--cream, #FFF8F0);
-    position: relative;
-  }
-  
-  .product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s ease;
-  }
-  
-  .placeholder-image {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--beige, #F5E6D3), var(--cream, #FFF8F0));
-    color: var(--brown-light, #6B4E3D);
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1rem;
-    font-weight: 500;
-  }
-  
-  .product-card:hover .product-image {
+  .product-card:hover :global(.product-image.hover-effect) {
     transform: scale(1.05);
   }
   
-  .venta-docena-badge {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    background: var(--gold, #B8860B);
-    color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    box-shadow: 0 2px 8px rgba(184, 134, 11, 0.3);
+  .image-wrapper {
+    position: relative;
   }
   
   .content {
@@ -221,142 +106,10 @@ const precioMostrar = precioUnidad || precioUnitarioCalculado;
     flex: 1;
   }
   
-  .tags {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
-  }
-  
-  .tag {
-    font-size: 0.75rem;
-    color: #2D2416;
-    background: #F5F0E8;
-    padding: 4px 10px;
-    border-radius: 15px;
-    font-weight: 500;
-  }
-  
-  .price-section {
-    margin-bottom: 1rem;
-    padding: 1rem;
-    background: var(--cream-light, #FFFBF7);
-    border-radius: var(--radius, 12px);
-    border: 1px solid var(--beige, #F5E6D3);
-  }
-  
-  .price-main {
-    display: flex;
-    align-items: baseline;
-    gap: 0.25rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .currency {
-    font-size: 1rem;
-    color: var(--gold-dark, #8B6914);
-    font-weight: 600;
-  }
-  
-  .price {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--brown-dark, #2B1911);
-    font-family: 'Playfair Display', serif;
-  }
-  
-  .price-type {
-    font-size: 0.9rem;
-    color: var(--brown-light, #6B4E3D);
-    font-style: italic;
-  }
-  
-  .price-unit {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 0.5rem;
-    border-top: 1px dashed var(--beige, #F5E6D3);
-  }
-  
-  .unit-label {
-    font-size: 0.85rem;
-    color: var(--brown-light, #6B4E3D);
-  }
-  
-  .unit-price {
-    font-size: 1rem;
-    color: var(--gold-dark, #8B6914);
-    font-weight: 600;
-  }
-  
-  .footer {
-    display: flex;
-    gap: 0.75rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--beige, #F5E6D3);
-  }
-  
-  .btn-ver {
-    flex: 1;
-    background: var(--gold, #B8860B);
-    color: white;
-    padding: 10px 16px;
-    border-radius: var(--radius, 12px);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-align: center;
-    transition: all 0.3s;
-    box-shadow: 0 2px 8px rgba(184, 134, 11, 0.2);
-  }
-  
-  .btn-ver:hover {
-    background: var(--gold-dark, #8B6914);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(184, 134, 11, 0.3);
-  }
-  
-  .btn-whatsapp {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 10px 16px;
-    background: #25D366;
-    color: white;
-    border-radius: var(--radius, 12px);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: all 0.3s;
-    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3);
-  }
-  
-  .btn-whatsapp:hover {
-    background: #1DA851;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
-  }
-  
   /* Responsive styles */
   @media (max-width: 768px) {
     .content {
       padding: 1.25rem;
-    }
-    
-    .footer {
-      gap: 0.5rem;
-    }
-    
-    .btn-ver,
-    .btn-whatsapp {
-      padding: 12px 14px;
-      font-size: 0.85rem;
-    }
-    
-    .btn-whatsapp svg {
-      width: 14px;
-      height: 14px;
     }
   }
   
@@ -364,58 +117,11 @@ const precioMostrar = precioUnidad || precioUnitarioCalculado;
     .content {
       padding: 1rem;
     }
-    
-    .footer {
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    
-    .btn-ver,
-    .btn-whatsapp {
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
-      justify-content: center;
-      padding: 12px 16px;
-      font-size: 0.9rem;
-      margin: 0;
-    }
   }
   
   @media (max-width: 480px) {
     .content {
       padding: 0.875rem;
-    }
-    
-    .footer {
-      flex-direction: column;
-      gap: 0.5rem;
-      padding-top: 0.75rem;
-      width: 100%;
-    }
-    
-    .btn-ver,
-    .btn-whatsapp {
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
-      justify-content: center;
-      padding: 14px 16px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin: 0;
-      display: flex;
-      align-items: center;
-    }
-    
-    .btn-whatsapp {
-      gap: 0.75rem;
-    }
-    
-    .btn-whatsapp svg {
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
     }
   }
   
@@ -430,35 +136,6 @@ const precioMostrar = precioUnidad || precioUnitarioCalculado;
     
     .description {
       font-size: 0.85rem;
-    }
-    
-    .footer {
-      gap: 0.375rem;
-      padding-top: 0.75rem;
-      width: 100%;
-    }
-    
-    .btn-ver,
-    .btn-whatsapp {
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
-      padding: 12px 14px;
-      font-size: 0.85rem;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .btn-whatsapp {
-      gap: 0.5rem;
-    }
-    
-    .btn-whatsapp svg {
-      width: 14px;
-      height: 14px;
-      flex-shrink: 0;
     }
   }
 </style>

@@ -1,0 +1,45 @@
+---
+export interface Props {
+  destacado: boolean;
+  ventaPor: 'unidad' | 'docena';
+}
+
+const { destacado, ventaPor } = Astro.props;
+---
+
+{destacado && <span class="badge-destacado">⭐ Destacado</span>}
+{ventaPor === 'docena' && (
+  <div class="venta-docena-badge">
+    <span>Por Docena</span>
+  </div>
+)}
+
+<style>
+  .badge-destacado {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--pink, #E91E63);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3);
+    font-family: 'Open Sans', sans-serif;
+  }
+  
+  .venta-docena-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--gold, #B8860B);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(184, 134, 11, 0.3);
+  }
+</style>

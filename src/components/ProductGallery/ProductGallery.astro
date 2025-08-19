@@ -1,12 +1,11 @@
 ---
-import { Image } from 'astro:assets';
+import MainImage from './MainImage.astro';
+import ThumbnailGrid from './ThumbnailGrid.astro';
+import ImageModal from './ImageModal.astro';
 import type { ImageMetadata } from 'astro';
+import type { ProductGalleryProps } from '../../types/types';
 
-export interface Props {
-  productId: string;
-  images: string[];
-  productName: string;
-}
+const { productId, images, productName } = Astro.props as ProductGalleryProps;
 
 // Interfaz para los datos de imagen
 interface ImageData {
@@ -15,81 +14,93 @@ interface ImageData {
   alt: string;
 }
 
-const { productId, images, productName } = Astro.props;
-
-// Función para importar todas las imágenes del producto
+// Función para importar todas las imágenes del producto con mejor manejo de errores
 const imageImports: ImageData[] = [];
-for (const imageName of images) {
-  try {
-    const imageModules = import.meta.glob('/src/content/productos/*/*.{png,jpg,jpeg,webp,avif}');
-    const imagePath = `/src/content/productos/${productId}/${imageName}`;
-    
-    if (imageModules[imagePath]) {
-      const imageModule = await imageModules[imagePath]() as { default: ImageMetadata };
-      imageImports.push({
-        src: imageModule.default,
-        name: imageName,
-        alt: `${productName} - ${imageName}`
-      });
+
+if (Array.isArray(images) && images.length > 0) {
+  // Obtenemos todos los módulos de imagen disponibles
+  const imageModules = import.meta.glob('/src/content/productos/*/*.{png,jpg,jpeg,webp,avif}', { eager: false });
+  
+  for (const imageName of images) {
+    if (!imageName || typeof imageName !== 'string') {
+      console.warn(`Nombre de imagen inválido:`, imageName);
+      continue;
     }
-  } catch (error) {
-    console.warn(`No se pudo cargar la imagen: /src/content/productos/${productId}/${imageName}`);
+
+    try {
+      // Construimos la ruta de la imagen
+      const imagePath = `/src/content/productos/${productId}/${imageName}`;
+      
+      // Verificamos si el módulo existe antes de importarlo
+      if (imageModules[imagePath]) {
+        const imageModule = await imageModules[imagePath]() as { default: ImageMetadata };
+        
+        // Validamos que el módulo tenga la estructura correcta
+        if (imageModule?.default && typeof imageModule.default === 'object') {
+          imageImports.push({
+            src: imageModule.default,
+            name: imageName,
+            alt: `${productName} - ${imageName.replace(/\.[^/.]+$/, '')}`
+          });
+        } else {
+          console.warn(`Módulo de imagen con estructura inválida: ${imagePath}`);
+        }
+      } else {
+        console.warn(`Imagen no encontrada: ${imagePath}`);
+        // Intentamos con diferentes extensiones si la original no funciona
+        const baseName = imageName.replace(/\.[^/.]+$/, '');
+        const extensions = ['jpg', 'jpeg', 'png', 'webp', 'avif'];
+        
+        let found = false;
+        for (const ext of extensions) {
+          const altPath = `/src/content/productos/${productId}/${baseName}.${ext}`;
+          if (imageModules[altPath]) {
+            try {
+              const altImageModule = await imageModules[altPath]() as { default: ImageMetadata };
+              if (altImageModule?.default) {
+                imageImports.push({
+                  src: altImageModule.default,
+                  name: `${baseName}.${ext}`,
+                  alt: `${productName} - ${baseName}`
+                });
+                found = true;
+                break;
+              }
+            } catch (altError) {
+              console.warn(`Error cargando imagen alternativa ${altPath}:`, altError);
+            }
+          }
+        }
+        
+        if (!found) {
+          console.warn(`No se pudo encontrar la imagen con ninguna extensión: ${baseName}`);
+        }
+      }
+    } catch (error) {
+      console.error(`Error procesando imagen ${imageName}:`, error);
+    }
   }
 }
 
+// Log para debugging
+if (imageImports.length === 0) {
+  console.warn(`No se pudieron cargar imágenes para el producto: ${productId}`);
+  console.warn(`Imágenes solicitadas:`, images);
+}
 ---
 
-<div class="gallery-container">
-  <div class="main-image-container">
-    {imageImports.length > 0 ? (
-      <Image 
-        id="mainImage"
-        src={imageImports[0].src}
-        alt={`${productName} - Vista principal`}
-        width={600}
-        height={400}
-        class="main-image"
-        format="webp"
-        quality={90}
-        widths={[400, 600, 800]}
-        sizes="(max-width: 768px) 400px, (max-width: 1200px) 600px, 800px"
-      />
-    ) : (
-      <div class="placeholder-main-image">
-        <span>Imagen no disponible</span>
-      </div>
-    )}
-    <div class="zoom-hint">🔍 Click para ampliar</div>
-  </div>
+<div class="gallery-container" data-product-gallery>
+  <MainImage 
+    images={imageImports}
+    productName={productName}
+  />
   
-  {imageImports.length > 1 && (
-    <div class="thumbnails">
-      {imageImports.map((imageData, index) => (
-        <button
-          class={`thumbnail ${index === 0 ? 'active' : ''}`}
-          data-index={index}
-          aria-label={`Ver imagen ${index + 1}`}
-        >
-          <Image 
-            src={imageData.src}
-            alt={imageData.alt}
-            width={100}
-            height={100}
-            loading="lazy"
-            class="thumbnail-image"
-            format="webp"
-            quality={75}
-          />
-        </button> 
-      ))}
-    </div>
-  )}
-</div>
-
-<div id="imageModal" class="modal">
-  <span class="close">&times;</span>
-  <img class="modal-content" id="modalImage" alt="Imagen ampliada">
-  <div class="modal-caption" id="caption"></div>
+  <ThumbnailGrid 
+    images={imageImports}
+    productName={productName}
+  />
+  
+  <ImageModal />
 </div>
 
 <style>
@@ -99,248 +110,13 @@ for (const imageName of images) {
     gap: 1rem;
   }
   
-  .main-image-container {
-    position: relative;
-    background: var(--cream-2, #FAF3E0);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px var(--shadow, rgba(0, 0, 0, 0.1));
-    border: 1px solid var(--border, #F5E6D3);
-  }
-  
-  .main-image {
-    width: 100%;
-    height: 400px;
-    object-fit: contain;
-    cursor: zoom-in;
-    transition: transform 0.3s ease;
-  }
-  
-  .placeholder-main-image {
-    width: 100%;
-    height: 400px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--cream-2, #FAF3E0), #F0E68C);
-    color: var(--brown-light, #6B4E3D);
-    font-family: 'Georgia', serif;
-    font-size: 1.25rem;
-    font-weight: 500;
-  }
-  
-  .main-image:hover {
-    transform: scale(1.02);
-  }
-  
-  .zoom-hint {
-    position: absolute;
-    bottom: 12px;
-    right: 12px;
-    background: linear-gradient(135deg, var(--gold, #B8860B), var(--gold-dark, #8B6914));
-    color: white;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    box-shadow: 0 2px 8px var(--shadow, rgba(0, 0, 0, 0.2));
-  }
-  
-  .main-image-container:hover .zoom-hint {
-    opacity: 1;
-  }
-  
-  .thumbnails {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 0.75rem;
-  }
-  
-  .thumbnail {
-    border: 2px solid var(--border, #F5E6D3);
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    background: var(--cream-2, #FAF3E0);
-    transition: all 0.3s ease;
-    padding: 0;
-    height: 80px;
-  }
-  
-  .thumbnail-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .thumbnail:hover {
-    border-color: var(--gold, #B8860B);
-    transform: scale(1.05);
-    box-shadow: 0 2px 8px var(--shadow, rgba(0, 0, 0, 0.1));
-  }
-  
-  .thumbnail.active {
-    border-color: var(--gold, #B8860B);
-    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
-  }
-  
-  /* Modal styles */
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
-    animation: fadeIn 0.3s ease;
-  }
-  
-  .modal-content {
-    margin: auto;
-    display: block;
-    max-width: 90%;
-    max-height: 90vh;
-    margin-top: 2rem;
-    animation: zoomIn 0.3s ease;
-    border-radius: 8px;
-  }
-  
-  .modal-caption {
-    margin: auto;
-    display: block;
-    width: 80%;
-    max-width: 700px;
-    text-align: center;
-    color: var(--cream-2, #FAF3E0);
-    padding: 10px 0;
-    font-family: 'Georgia', 'Times New Roman', serif;
-  }
-  
-  .close {
-    position: absolute;
-    top: 15px;
-    right: 35px;
-    color: #f1f1f1;
-    font-size: 40px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s ease;
-  }
-  
-  .close:hover {
-    color: var(--gold, #B8860B);
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  @keyframes zoomIn {
-    from { transform: scale(0.8); }
-    to { transform: scale(1); }
-  }
-  
   @media (max-width: 768px) {
-    .main-image,
-    .placeholder-main-image {
-      height: 300px;
-    }
-    
-    .thumbnails {
-      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-    }
-    
-    .thumbnail {
-      height: 60px;
-    }
-    
-    .close {
-      top: 10px;
-      right: 20px;
-      font-size: 30px;
+    .gallery-container {
+      gap: 0.75rem;
     }
   }
 </style>
 
 <script>
-  // Interface para los datos de imagen en el cliente
-  interface ClientImageData {
-    src: string;
-    alt: string;
-  }
-  
-  // Tipamos correctamente el array de datos de imagen
-  const imageData: ClientImageData[] = [];
-  
-  document.addEventListener('DOMContentLoaded', function() {
-    const thumbnails = document.querySelectorAll<HTMLButtonElement>('.thumbnail');
-    const mainImageContainer = document.querySelector('.main-image-container');
-    const mainImage = mainImageContainer?.querySelector('img') as HTMLImageElement | null;
-    
-    // Recolectamos las URLs de las imágenes de los thumbnails
-    thumbnails.forEach((thumb, index) => {
-      const img = thumb.querySelector('img');
-      if (img && img.src) {
-        imageData.push({
-          src: img.src,
-          alt: img.alt || `Imagen ${index + 1}`
-        });
-      }
-    });
-    
-    // Configuramos los event listeners de thumbnails
-    thumbnails.forEach((thumb, index) => {
-      thumb.addEventListener('click', function(this: HTMLButtonElement) {
-        if (mainImage && imageData[index]) {
-          mainImage.src = imageData[index].src;
-          mainImage.alt = imageData[index].alt;
-          
-          // Actualizamos la clase active
-          thumbnails.forEach(t => t.classList.remove('active'));
-          this.classList.add('active');
-        }
-      });
-    });
-    
-    // Configuramos el modal
-    const modal = document.getElementById('imageModal') as HTMLDivElement | null;
-    const modalImg = document.getElementById('modalImage') as HTMLImageElement | null;
-    const caption = document.getElementById('caption') as HTMLDivElement | null;
-    const closeBtn = document.querySelector('.close') as HTMLSpanElement | null;
-    
-    if (mainImage && modal && modalImg) {
-      mainImage.addEventListener('click', function() {
-        modal.style.display = 'block';
-        modalImg.src = this.src;
-        if (caption) {
-          caption.textContent = this.alt;
-        }
-      });
-    }
-    
-    if (closeBtn && modal) {
-      closeBtn.addEventListener('click', function() {
-        modal.style.display = 'none';
-      });
-    }
-    
-    if (modal) {
-      modal.addEventListener('click', function(e: MouseEvent) {
-        if (e.target === modal) {
-          modal.style.display = 'none';
-        }
-      });
-    }
-    
-    document.addEventListener('keydown', function(e: KeyboardEvent) {
-      if (e.key === 'Escape' && modal) {
-        modal.style.display = 'none';
-      }
-    });
-  });
+  import('./gallery-controller.ts');
 </script>
