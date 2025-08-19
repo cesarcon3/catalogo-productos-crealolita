@@ -1,0 +1,22 @@
+{
+  "id": "primera-comunion",
+  "nombre": "Rosario con placa de Primera Comunión",
+  "categoria": "primera-comunion",
+  "precio": 24.00,
+  "moneda": "USD",
+  "descripcion": "Recuerdo de Primera Comunión en MDF con forma de rosario y placa rectangular grabada con un niño orando y mensaje religioso. Precio por docena.",
+  "caracteristicas": [
+    "MDF de alta calidad 3mm",
+    "Medidas: 15cm de alto x 12cm de ancho",
+    "Diseño con rosario y niño grabado",
+    "Texto: 'Mi Primera Comunión' con frase religiosa"
+  ],
+  "personalizacion": {
+    "disponible": true,
+    "opciones": ["Nombre del niño o niña", "Fecha del evento"]
+  },
+  "tiempoProduccion": "3-5 días",
+  "disponible": true,
+  "destacado": true,
+  "tags": ["primera comunion", "rosario", "recuerdo", "grabado laser"]
+}

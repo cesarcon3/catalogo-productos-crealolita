@@ -1,0 +1,22 @@
+{
+  "id": "mi-confirmacion",
+  "nombre": "Rosario con placa de Mi Confirmación",
+  "categoria": "confirmacion",
+  "precio": 24.00,
+  "moneda": "USD",
+  "descripcion": "Recuerdo de Confirmación en MDF con forma de rosario y placa rectangular grabada con motivo religioso y mensaje especial. Precio por docena.",
+  "caracteristicas": [
+    "MDF de alta calidad 3mm",
+    "Medidas: 15cm de alto x 12cm de ancho",
+    "Diseño con rosario y motivo de Confirmación grabado",
+    "Texto: 'Mi Confirmación' con frase religiosa"
+  ],
+  "personalizacion": {
+    "disponible": true,
+    "opciones": ["Nombre del confirmado o confirmada", "Fecha del evento"]
+  },
+  "tiempoProduccion": "3-5 días",
+  "disponible": true,
+  "destacado": true,
+  "tags": ["confirmacion", "rosario", "recuerdo", "grabado laser"]
+}

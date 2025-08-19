@@ -1,0 +1,22 @@
+{
+  "id": "mi-bautizo",
+  "nombre": "Rosario con placa de Mi Bautizo",
+  "categoria": "bautizo",
+  "precio": 24.00,
+  "moneda": "USD",
+  "descripcion": "Recuerdo de Bautizo en MDF con forma de rosario y placa rectangular grabada con motivo religioso y mensaje especial. Precio por docena.",
+  "caracteristicas": [
+    "MDF de alta calidad 3mm",
+    "Medidas: 15cm de alto x 12cm de ancho",
+    "Diseño con rosario y motivo de Bautizo grabado",
+    "Texto: 'Mi Bautizo' con frase religiosa"
+  ],
+  "personalizacion": {
+    "disponible": true,
+    "opciones": ["Nombre del niño o niña", "Fecha del evento"]
+  },
+  "tiempoProduccion": "3-5 días",
+  "disponible": true,
+  "destacado": true,
+  "tags": ["bautizo", "rosario", "recuerdo", "grabado laser"]
+}
