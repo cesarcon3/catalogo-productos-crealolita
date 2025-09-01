@@ -1,0 +1,22 @@
+{
+  "id": "carruaje-15-anos",
+  "nombre": "Carruaje de Princesa en MDF para 15 Años",
+  "categoria": "quinceanos",
+  "precio": 95,
+  "moneda": "USD",
+  "descripcion": "Carruaje decorativo en MDF ideal para recuerdos de 15 años, con diseño elegante estilo princesa y detalles grabados. Puede personalizarse con nombre grabado. Precio por docena.",
+  "caracteristicas": [
+    "MDF de alta calidad 3mm",
+    "Medidas: 25cm de largo x 22cm de alto",
+    "Diseño en forma de carruaje de princesa",
+    "Texto personalizable grabado con láser"
+  ],
+  "personalizacion": {
+    "disponible": true,
+    "opciones": ["Nombre de la quinceañera", "Fecha del evento"]
+  },
+  "tiempoProduccion": "3-5 días",
+  "disponible": true,
+  "destacado": false,
+  "tags": ["15 años", "carruaje", "princesa", "recuerdo", "grabado laser"]
+}
