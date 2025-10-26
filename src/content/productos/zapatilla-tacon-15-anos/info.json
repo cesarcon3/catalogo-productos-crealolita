@@ -1,0 +1,22 @@
+{
+  "id": "zapatilla-tacon-15-anos",
+  "nombre": "Recuerdo de Zapatilla con Tacón en MDF para 15 Años",
+  "categoria": "quinceanos",
+  "precio": 22,
+  "moneda": "USD",
+  "descripcion": "Elegante recuerdo en MDF con forma de zapatilla de tacón, mariposa y el número 'Mis 15'. Ideal para centros de mesa o souvenirs de 15 años. Incluye base personalizable. Precio por docena.",
+  "caracteristicas": [
+    "MDF de alta calidad 3mm",
+    "Medidas: 12 cm de alto x 12 cm de ancho.",
+    "Diseño de zapatilla, mariposa y número 'Mis 15'",
+    "Texto personalizable grabado con láser en la base"
+  ],
+  "personalizacion": {
+    "disponible": true,
+    "opciones": ["Nombre de la quinceañera", "Fecha del evento"]
+  },
+  "tiempoProduccion": "3-5 días",
+  "disponible": true,
+  "destacado": false,
+  "tags": ["15 años", "zapatilla", "tacón", "recuerdo", "grabado laser", "mariposa"]
+}
