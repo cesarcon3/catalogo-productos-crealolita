@@ -1,6 +1,27 @@
 ---
 // src/components/SEOHead.astro
-import { SITE_CONFIG, getFullTitle, getFullImageUrl } from '../config/site.ts';
+import { SITE_CONFIG, getFullTitle, getFullImageUrl } from '../config/site';
+
+// Declaraciones globales para Meta Pixel (sin alterar ejecución)
+declare global {
+  interface Window {
+    fbq?: (...args: any[]) => void;
+    _fbq?: any;
+  }
+}
+
+// Asegurar que fbq existe globalmente (para los scripts inline)
+declare var fbq: (...args: any[]) => void;
+
+// Sobrescribir tipo de "if (f.fbq)" dentro del script para evitar el error "void"
+type FBQNamespace = {
+  callMethod?: (...args: any[]) => void;
+  queue?: any[];
+  push?: any;
+  loaded?: boolean;
+  version?: string;
+};
+
 
 export interface Props {
   title?: string;
@@ -69,6 +90,26 @@ const organizationSchema = {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Meta Pixel Code -->
+ 
+<script is:inline>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1476451196973992');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1476451196973992&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
   
 <!-- Google Tag Manager -->
 <script is:inline>
